@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/post_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
+import 'package:social_app/views/social_screens/new_post.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -11,53 +12,69 @@ class FeedScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var posts = SocialCubit.get(context).posts;
-        return posts.isNotEmpty || state is SocialGetPostsSuccess
-            ? SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    // Card(
-                    //   clipBehavior: Clip.antiAliasWithSaveLayer,
-                    //   elevation: 10.0,
-                    //   margin: const EdgeInsets.all(8.0),
-                    //   child: Stack(
-                    //     alignment: AlignmentDirectional.bottomEnd,
-                    //     children: [
-                    //       Image(
-                    //         image: NetworkImage(
-                    //             'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2023/04/BMD-4471.png'),
-                    //         fit: BoxFit.cover,
-                    //         height: 200,
-                    //         width: double.infinity,
-                    //       ),
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: Text(
-                    //           'communicate with friends',
-                    //           style: Theme.of(context)
-                    //               .textTheme
-                    //               .subtitle1
-                    //               ?.copyWith(color: Colors.white),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) =>
-                          buildPostItem(context, posts[index], index),
-                      itemCount: posts.length,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 8.0,
+        return true
+            ? Scaffold(
+                body: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // Card(
+                      //   clipBehavior: Clip.antiAliasWithSaveLayer,
+                      //   elevation: 10.0,
+                      //   margin: const EdgeInsets.all(8.0),
+                      //   child: Stack(
+                      //     alignment: AlignmentDirectional.bottomEnd,
+                      //     children: [
+                      //       Image(
+                      //         image: NetworkImage(
+                      //             'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2023/04/BMD-4471.png'),
+                      //         fit: BoxFit.cover,
+                      //         height: 200,
+                      //         width: double.infinity,
+                      //       ),
+                      //       Padding(
+                      //         padding: const EdgeInsets.all(8.0),
+                      //         child: Text(
+                      //           'communicate with friends',
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .subtitle1
+                      //               ?.copyWith(color: Colors.white),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => buildPostItem(context),
+                        itemCount: 10,
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 8.0,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    )
-                  ],
+                      const SizedBox(
+                        height: 8.0,
+                      )
+                    ],
+                  ),
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewPostScreen(),
+                        ));
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                  shape: CircleBorder(),
                 ),
               )
             : const Center(
@@ -67,10 +84,10 @@ class FeedScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPostItem(context, PostModel post, int index) => Card(
+  Widget buildPostItem(context) => Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         elevation: 5.0,
-        color: Colors.white12.withOpacity(.04),
+        color: Colors.purpleAccent.withOpacity(0.022),
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -81,7 +98,7 @@ class FeedScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 25.0,
-                    backgroundImage: NetworkImage(post.image!),
+                    // backgroundImage: NetworkImage('post.image!'),
                   ),
                   const SizedBox(
                     width: 15,
@@ -92,7 +109,10 @@ class FeedScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(post.name!, style: TextStyle(color: Colors.white),),
+                          Text(
+                            'post.name!',
+                            style: TextStyle(color: Colors.white),
+                          ),
                           const SizedBox(
                             width: 5.0,
                           ),
@@ -104,8 +124,11 @@ class FeedScreen extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        post.dateTime!,
-                        style: Theme.of(context).textTheme.caption?.copyWith(color: Colors.white),
+                        'post.dateTime!',
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption
+                            ?.copyWith(color: Colors.white),
                       )
                     ],
                   )),
@@ -113,7 +136,10 @@ class FeedScreen extends StatelessWidget {
                     width: 15,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.more_horiz, color: Colors.white,),
+                    icon: const Icon(
+                      Icons.more_horiz,
+                      color: Colors.white,
+                    ),
                     onPressed: () {},
                   ),
                 ],
@@ -127,7 +153,7 @@ class FeedScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                post.text!,
+                'post.text!',
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge
@@ -161,14 +187,14 @@ class FeedScreen extends StatelessWidget {
               //     ),
               //   ),
               // ),
-              if (post.postImage != '')
+              if ('post.postImage' == '')
                 Container(
                   height: 140,
                   width: double.infinity,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
                       image: DecorationImage(
-                        image: NetworkImage(post.postImage!),
+                        image: NetworkImage('post.postImage!'),
                         fit: BoxFit.cover,
                       )),
                 ),
@@ -191,8 +217,11 @@ class FeedScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                '${SocialCubit.get(context).likes[index]}',
-                                style: Theme.of(context).textTheme.caption?.copyWith(color: Colors.white),
+                                '0',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    ?.copyWith(color: Colors.white),
                               )
                             ],
                           ),
@@ -217,7 +246,10 @@ class FeedScreen extends StatelessWidget {
                               ),
                               Text(
                                 '0 comment',
-                                style: Theme.of(context).textTheme.caption?.copyWith(color: Colors.white),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    ?.copyWith(color: Colors.white),
                               )
                             ],
                           ),
@@ -233,7 +265,9 @@ class FeedScreen extends StatelessWidget {
                 height: 1,
                 color: Colors.black,
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -242,15 +276,18 @@ class FeedScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 18.0,
-                            backgroundImage: NetworkImage(
-                                SocialCubit.get(context).model!.image!),
+                            // backgroundImage: NetworkImage(
+                            //     'SocialCubit.get(context).model!.image!'),
                           ),
                           const SizedBox(
                             width: 15,
                           ),
                           Text(
                             'write a comment ...',
-                            style: Theme.of(context).textTheme.caption?.copyWith(color: Colors.white),
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                ?.copyWith(color: Colors.white),
                           )
                         ],
                       ),
@@ -270,13 +307,16 @@ class FeedScreen extends StatelessWidget {
                         ),
                         Text(
                           'Like',
-                          style: Theme.of(context).textTheme.caption?.copyWith(color: Colors.white),
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              ?.copyWith(color: Colors.white),
                         )
                       ],
                     ),
                     onTap: () {
-                      SocialCubit.get(context)
-                          .likePost(SocialCubit.get(context).postsId[index]);
+                      // SocialCubit.get(context)
+                      //     .likePost(SocialCubit.get(context).postsId[index]);
                     },
                   )
                 ],

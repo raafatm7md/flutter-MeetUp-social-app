@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:social_app/models/message_model.dart';
 import 'package:social_app/models/post_model.dart';
 import 'package:social_app/services/shared.dart';
+import 'package:social_app/views/social_screens/ai_chat.dart';
 import 'package:social_app/views/social_screens/chat.dart';
 import 'package:social_app/views/social_screens/feed.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
@@ -39,20 +40,16 @@ class SocialCubit extends Cubit<SocialState> {
   List<Widget> screens = [
     const FeedScreen(),
     const ChatScreen(),
-    NewPostScreen(),
     const UsersScreen(),
+    const AIChatScreen(),
     const SettingsScreen(),
   ];
   void changeBottomNav(int index) {
-    if (index == 2) {
-      emit(SocialNewPost());
-    } else {
-      currentIndex = index;
-      emit(SocialChangeBottomNav());
-    }
+    currentIndex = index;
+    emit(SocialChangeBottomNav());
   }
 
-  List<String> titles = ['Home', 'Chat', 'New Post', 'Users', 'Settings'];
+  List<String> titles = ['Home', 'Chat', 'Users Map', 'AI', 'Settings'];
 
   File? profileImage;
   var picker = ImagePicker();

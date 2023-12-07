@@ -11,13 +11,12 @@ class NewPostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserData(),
+      create: (context) => SocialCubit(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {},
         builder: (context, state) {
-          UserModel? model = SocialCubit.get(context).model;
 
-          return model != null
+          return false
               ? Scaffold(
             appBar: AppBar(
               title: const Text('Add Post'),
@@ -25,17 +24,17 @@ class NewPostScreen extends StatelessWidget {
               actions: [
                 TextButton(
                     onPressed: () {
-                      var now = DateTime.now();
-                      if (SocialCubit.get(context).postImage == null) {
-                        SocialCubit.get(context).createPost(
-                            dateTime: now.toString(),
-                            text: textController.text);
-                      } else {
-                        SocialCubit.get(context).uploadPost(
-                            dateTime: now.toString(),
-                            text: textController.text);
-                      }
-                      Navigator.pop(context);
+                      // var now = DateTime.now();
+                      // if (SocialCubit.get(context).postImage == null) {
+                      //   SocialCubit.get(context).createPost(
+                      //       dateTime: now.toString(),
+                      //       text: textController.text);
+                      // } else {
+                      //   SocialCubit.get(context).uploadPost(
+                      //       dateTime: now.toString(),
+                      //       text: textController.text);
+                      // }
+                      // Navigator.pop(context);
                     },
                     child: const Text('post', style: TextStyle(fontSize: 20.0),)),
                 const SizedBox(
@@ -56,12 +55,12 @@ class NewPostScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 25.0,
-                        backgroundImage: NetworkImage(model!.image!),
+                        backgroundImage: NetworkImage('model!.image!'),
                       ),
                       SizedBox(
                         width: 15,
                       ),
-                      Expanded(child: Text(model.name!, style:  TextStyle(
+                      Expanded(child: Text('model.name!', style:  TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 18.0
                       ),)),
                     ],

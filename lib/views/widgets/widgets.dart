@@ -54,23 +54,30 @@ Widget appTextFormField({
           }
           return null;
         } else if (type == 'birthday'){
-          final DateTime now = DateTime.now();
-          String str1 = value!;
-          List<String> str2 = str1.split('/');
-          int month = int.parse(str2.isNotEmpty ? str2[0] : '');
-          int day = int.parse(str2.length > 1 ? str2[1] : '');
-          int year = int.parse(str2.length > 2 ? str2[2] : '');
-          if (value.isEmpty) {
+          if (value!.isEmpty) {
             return 'Please enter your birthday';
-          } else if (month > 12) {
-            return 'Invalid month';
-          } else if (day > 31) {
-            return 'Invalid day';
-          } else if ((now.year-year)*365 + (now.month-month)*30 + (now.day-day) < (16*365)) {
-            // (int.parse(year) > int.parse(formatted)-18)
-            return 'Must be older than 16 years';
-          } else if((year < 1920)){
-            return 'Invalid year';
+          } else {
+            final DateTime now = DateTime.now();
+            String str1 = value;
+            List<String> str2 = str1.split('/');
+            int month = int.parse(str2.isNotEmpty ? str2[0] : '');
+            int day = int.parse(str2.length > 1 ? str2[1] : '');
+            int year = int.parse(str2.length > 2 ? str2[2] : '');
+            if (month > 12) {
+              return 'Invalid month';
+            } else if (day > 31) {
+              return 'Invalid day';
+            } else if ((now.year-year)*365 + (now.month-month)*30 + (now.day-day) < (16*365)) {
+              // (int.parse(year) > int.parse(formatted)-18)
+              return 'Must be older than 16 years';
+            } else if((year < 1920)){
+              return 'Invalid year';
+            }
+          }
+          return null;
+        } else if (type == 'otp'){
+          if (value?.length != 4) {
+            return "Please enter correct OTP";
           }
           return null;
         }

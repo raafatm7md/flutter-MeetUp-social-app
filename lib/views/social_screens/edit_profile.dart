@@ -13,19 +13,18 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserData(),
+      create: (context) => SocialCubit(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {},
         builder: (context, state) {
-          UserModel? userModel = SocialCubit.get(context).model;
+          User? user;
           var profileImage = SocialCubit.get(context).profileImage;
           var coverImage = SocialCubit.get(context).coverImage;
 
-          nameController.text = userModel?.name ?? '';
-          bioController.text = userModel?.bio ?? '';
-          phoneController.text = userModel?.phone ?? '';
+          nameController.text = user?.name ?? '';
 
-          return userModel != null
+
+          return user != null
               ? Scaffold(
                   appBar: AppBar(
                     title: const Text('Edit Profile'),
@@ -33,10 +32,10 @@ class EditProfileScreen extends StatelessWidget {
                     actions: [
                       TextButton(
                           onPressed: () {
-                            SocialCubit.get(context).updateUser(
-                                name: nameController.text,
-                                phone: phoneController.text,
-                                bio: bioController.text);
+                            // SocialCubit.get(context).updateUser(
+                            //     name: nameController.text,
+                            //     phone: phoneController.text,
+                            //     bio: bioController.text);
                           },
                           child: const Text('update', style: TextStyle(fontSize: 20.0))),
                       const SizedBox(
@@ -72,7 +71,7 @@ class EditProfileScreen extends StatelessWidget {
                                             image: DecorationImage(
                                               image: coverImage == null
                                                   ? NetworkImage(
-                                                      '${userModel.cover}')
+                                                      '${user.cover}')
                                                   : FileImage(coverImage)
                                                       as ImageProvider,
                                               fit: BoxFit.cover,
@@ -100,7 +99,7 @@ class EditProfileScreen extends StatelessWidget {
                                       child: CircleAvatar(
                                         radius: 60.0,
                                         backgroundImage: profileImage == null
-                                            ? NetworkImage('${userModel.image}')
+                                            ? NetworkImage('${user.image}')
                                             : FileImage(profileImage)
                                                 as ImageProvider,
                                       ),

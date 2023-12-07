@@ -29,30 +29,62 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!(controller?.value.isInitialized ?? false)){
+    if (!(controller?.value.isInitialized ?? false)) {
       return Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text('no camera found', style: TextStyle(color: Colors.white),),),
+        body: Center(
+          child: Text(
+            'no camera found',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       );
     }
     return Scaffold(
-      appBar: AppBar(),
-      body: Stack(
-        children: [
-          Positioned.fill(child: AspectRatio(
-            aspectRatio: controller!.value.aspectRatio,
-            child: CameraPreview(controller!),
-          )),
-          // Align(
-          //   alignment: Alignment(0, .85),
-          //   child: ElevatedButton(
-          //     style: ElevatedButton.styleFrom(
-          //       surfaceTintColor: Colors.red,
-          //     ),
-          //     child: Text,
-          //   ),
-          // )
-        ],
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned.fill(
+                child: AspectRatio(
+              aspectRatio: controller!.value.aspectRatio,
+              child: CameraPreview(controller!),
+            )),
+            Align(
+              alignment: Alignment(0, -.45),
+                child: Image.asset(
+              'assets/pics/faceMask.png',
+              color: Colors.deepPurple,
+              width: 350,
+            )),
+            Align(
+              alignment: Alignment(0, .9),
+              child: Container(
+                height: 45,
+                width: 175,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.deepPurple
+                ),
+                child: Text('processing ...', style: TextStyle(color: Colors.white, fontSize: 20)),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.arrow_circle_left,
+                  color: Colors.deepPurpleAccent,
+                  size: 45,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -65,17 +97,17 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
     await controller!.initialize();
     setState(() {});
     Timer.periodic(Duration(seconds: 3), (timer) async {
-      try{
+      try {
         final image = await controller!.takePicture();
         final compressedImageBytes = compressImage(image.path);
         // channel.sink.add(compressedImageBytes);
-      } catch (_){}
+      } catch (_) {}
     });
   }
 
-  Uint8List compressImage(String path, {int quality = 85})
-  {
-    final image = img.decodeImage(Uint8List.fromList(File(path).readAsBytesSync()))!;
+  Uint8List compressImage(String path, {int quality = 85}) {
+    final image =
+        img.decodeImage(Uint8List.fromList(File(path).readAsBytesSync()))!;
     final compressedImage = img.encodeJpg(image, quality: quality);
     return compressedImage;
   }

@@ -1,14 +1,14 @@
 class LoginModel {
   bool? status;
   String? message;
-  List<String>? errors;
+  List<dynamic>? errors;
   User? user;
 
   LoginModel.fromJson(Map<String, dynamic> json){
     status = json['status'];
     message = json['message'] ?? null;
     errors = json['errors'] ?? null;
-    user = json['user'] != null ? User.fromJson(json['user']): null;
+    user = json['data'] != null ? User.fromJson(json['data']): null;
   }
 }
 

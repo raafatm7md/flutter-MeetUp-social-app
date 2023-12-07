@@ -23,44 +23,14 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
-            if (state.registerModel.status == true) {
-              CacheHelper.saveData('token', state.registerModel.user?.token);
-              CacheHelper.saveData('user', [
-                state.registerModel.user?.name,
-                state.registerModel.user?.email,
-                state.registerModel.user?.email_active,
-                state.registerModel.user?.birthday,
-                state.registerModel.user?.image,
-                state.registerModel.user?.cover,
-              ]);
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SocialLayout(),
-                  ),
-                  (route) => false);
-            } else {
-              for (int i = 0; i < state.registerModel.errors!.length; i++){
-                Fluttertoast.showToast(
-                    msg: state.registerModel.errors![i],
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              };
-              if (state.registerModel.message != null){
-                Fluttertoast.showToast(
-                    msg: state.registerModel.message!,
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 5,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-            }
+              CacheHelper.saveData('token', state.token).then((value) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SocialLayout(),
+                    ),
+                        (route) => false);
+              });
           } else if (state is RegisterError) {
             Fluttertoast.showToast(
                 msg: state.error,

@@ -4,8 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/app_layout.dart';
 import 'package:social_app/views/login/login_cubit.dart';
-import 'package:social_app/views/social_screens/reset_password_screens/forgot_password.dart';
 import 'package:social_app/views/widgets/widgets.dart';
+
+import 'forgot_password.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -20,45 +21,14 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            if (state.loginModel.status == true) {
-              CacheHelper.saveData('token', state.loginModel.user?.token);
-              CacheHelper.saveData('user', [
-                state.loginModel.user?.name,
-                state.loginModel.user?.email,
-                state.loginModel.user?.email_active,
-                state.loginModel.user?.birthday,
-                state.loginModel.user?.image,
-                state.loginModel.user?.cover,
-              ]);
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SocialLayout(),
-                  ),
-                  (route) => false);
-            } else {
-              for (int i = 0; i < state.loginModel.errors!.length; i++) {
-                Fluttertoast.showToast(
-                    msg: state.loginModel.errors![i],
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-              ;
-              if (state.loginModel.message != null) {
-                Fluttertoast.showToast(
-                    msg: state.loginModel.message!,
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 5,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-            }
+              CacheHelper.saveData('token', state.token).then((value) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SocialLayout(),
+                    ),
+                        (route) => false);
+              });
           } else if (state is LoginError) {
             Fluttertoast.showToast(
                 msg: state.error,

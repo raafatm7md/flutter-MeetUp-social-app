@@ -5,6 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:social_app/models/login_model.dart';
 import 'package:social_app/services/dio.dart';
 
+import '../../services/shared.dart';
+
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -12,24 +14,25 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   static RegisterCubit get(context) => BlocProvider.of(context);
 
-  LoginModel? registerModel;
-
-  void userRegister(String username, String email, String password, String birthday) {
+  void userRegister(
+      String username, String email, String password, String birthday) {
     emit(RegisterLoading());
     determinePosition().then((value) {
       DioHelper.postData(url: 'register', data: {
-        'name': username,
+        'name': username.toLowerCase(),
         'email': email,
         'password': password,
         'birthday': birthday,
-        'image': 'https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg',
-        'cover': 'https://marketplace.canva.com/EAFJ_EHcmNA/1/0/1600w/canva-abstract-pastel-background-desktop-wallpaper-KtuyBRXG1OA.jpg',
         'longitude': userLocation?.longitude,
         'latitude': userLocation?.latitude
       }).then((value) {
-        print(value.data);
-        registerModel = LoginModel.fromJson(value.data);
-        emit(RegisterSuccess(registerModel!));
+        LoginModel registerRes = LoginModel.fromJson(value.data);
+        if (registerRes.status == true) {
+          CacheHelper.saveData('cachedPassword', password);
+          CacheHelper.saveData('cachedEmail', password);
+          emit(RegisterSuccess(registerRes.user!.token!));
+        } else
+          emit(RegisterError(registerRes.errors![0]));
       }).catchError((e) {
         emit(RegisterError(e.toString()));
       });

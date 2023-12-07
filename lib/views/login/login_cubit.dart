@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import '../../models/login_model.dart';
 import '../../services/dio.dart';
+import '../../services/shared.dart';
 
 part 'login_state.dart';
 
@@ -11,17 +12,18 @@ class LoginCubit extends Cubit<LoginState> {
 
   static LoginCubit get(context) => BlocProvider.of(context);
 
-  LoginModel? loginModel;
-
-  void userLogin(String email, String password){
+  void userLogin(String email, String password) {
     emit(LoginLoading());
-    DioHelper.postData(url: 'login', data: {
-      'email': email,
-      'password': password
-    }).then((value) {
-      print(value.data);
-      loginModel = LoginModel.fromJson(value.data);
-      emit(LoginSuccess(loginModel!));
+    DioHelper.postData(
+        url: 'login',
+        data: {'email': email, 'password': password}).then((value) {
+      LoginModel loginRes = LoginModel.fromJson(value.data);
+      if (loginRes.status == true) {
+        CacheHelper.saveData('cachedEmail', email);
+        CacheHelper.saveData('cachedPassword', password);
+        emit(LoginSuccess(loginRes.user!.token!));
+      } else
+        emit(LoginError(loginRes.message!));
     }).catchError((e) {
       emit(LoginError(e.toString()));
     });
@@ -29,9 +31,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   IconData suffix = Icons.visibility_outlined;
   bool password = true;
-  void changePasswordVisibility(){
+  void changePasswordVisibility() {
     password = !password;
-    suffix = password ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    suffix =
+        password ? Icons.visibility_outlined : Icons.visibility_off_outlined;
     emit(LoginPasswordVisibility());
   }
 }

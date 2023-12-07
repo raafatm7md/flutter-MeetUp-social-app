@@ -12,12 +12,12 @@ class ChatScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var users = SocialCubit.get(context).users;
-        return users.isNotEmpty
+        // var users;
+        return true
             ? ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) =>
-                    buildChatItem(users[index], context),
+                    buildChatItem(context),
                 separatorBuilder: (context, index) => Padding(
                       padding: const EdgeInsetsDirectional.only(
                         start: 20.0,
@@ -28,7 +28,7 @@ class ChatScreen extends StatelessWidget {
                         color: Colors.grey[300],
                       ),
                     ),
-                itemCount: users.length)
+                itemCount: 10)
             : const Center(
                 child: CircularProgressIndicator(),
               );
@@ -36,28 +36,28 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget buildChatItem(UserModel user, context) => InkWell(
+  Widget buildChatItem(context) => InkWell(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
             children: [
               CircleAvatar(
                 radius: 25.0,
-                backgroundImage: NetworkImage(user.image!),
+                backgroundImage: NetworkImage('user.image!'),
               ),
               const SizedBox(
                 width: 15,
               ),
-              Text(user.name!, style: TextStyle(color: Colors.white),),
+              Text('user.name!', style: TextStyle(color: Colors.white),),
             ],
           ),
         ),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatDetailsScreen(user: user),
-              ));
-        },
+        // onTap: () {
+        //   Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => ChatDetailsScreen(user: user),
+        //       ));
+        // },
       );
 }

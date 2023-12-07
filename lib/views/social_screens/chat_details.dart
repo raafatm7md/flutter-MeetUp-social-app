@@ -5,7 +5,7 @@ import 'package:social_app/models/login_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
-  final UserModel user;
+  final User user;
 
   ChatDetailsScreen({super.key, required this.user});
 
@@ -14,12 +14,12 @@ class ChatDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserData(),
+      create: (context) => SocialCubit(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {},
         builder: (context, state) {
-          SocialCubit.get(context).getMessages(receiverId: user.uId!);
-          var messages = SocialCubit.get(context).messages;
+          // SocialCubit.get(context).getMessages(receiverId: user.uId!);
+          var messages;
           return Scaffold(
             appBar: AppBar(
               titleSpacing: 0.0,
@@ -47,12 +47,12 @@ class ChatDetailsScreen extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             var message = messages[index];
-                            if (SocialCubit.get(context).model?.uId == message.senderId){
-                              return buildMyMessage(message);
-                            }
-                            else {
-                              return buildMessage(message);
-                            }
+                            // if (SocialCubit.get(context).model?.uId == message.senderId){
+                            //   return buildMyMessage(message);
+                            // }
+                            // else {
+                            //   return buildMessage(message);
+                            // }
                           },
                           separatorBuilder: (context, index) => SizedBox(height: 15,),
                           itemCount: messages.length
@@ -75,12 +75,12 @@ class ChatDetailsScreen extends StatelessWidget {
                           color: Colors.blue,
                           child: MaterialButton(
                               onPressed: () {
-                                SocialCubit.get(context).sendMessage(
-                                    receiverId: user.uId!,
-                                    dateTime: DateTime.now().toString(),
-                                    text: messageController.text
-                                );
-                                messageController.text = '';
+                                // SocialCubit.get(context).sendMessage(
+                                //     receiverId: user.uId!,
+                                //     dateTime: DateTime.now().toString(),
+                                //     text: messageController.text
+                                // );
+                                // messageController.text = '';
                               },
                               minWidth: 1,
                               child: const Icon(

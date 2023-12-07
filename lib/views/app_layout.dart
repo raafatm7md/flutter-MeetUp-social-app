@@ -27,6 +27,9 @@ class SocialLayout extends StatelessWidget {
               actions: [
                 IconButton(
                     onPressed: () {},
+                    icon: const Icon(Icons.wb_twighlight)),
+                IconButton(
+                    onPressed: () {},
                     icon: const Icon(Icons.notifications_active_outlined)),
                 IconButton(
                     onPressed: () {}, icon: const Icon(Icons.search_outlined)),
@@ -47,9 +50,10 @@ class SocialLayout extends StatelessWidget {
                 items: const [
                   BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
                   BottomNavigationBarItem(icon: Icon(Icons.chat_outlined), label: 'Chat'),
-                  BottomNavigationBarItem(icon: Icon(Icons.add_outlined), label: 'Post'),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person_search_outlined), label: 'Users'),
+                      icon: Icon(Icons.person_pin_circle_outlined), label: 'Users'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.insert_emoticon_outlined), label: 'AI'),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.settings_outlined), label: 'Settings'),
                 ],
