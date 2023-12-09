@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
+import 'package:social_app/views/social_screens/weather.dart';
 
 class SocialLayout extends StatelessWidget {
   const SocialLayout({super.key});
@@ -26,7 +27,9 @@ class SocialLayout extends StatelessWidget {
             appBar: AppBar(
               actions: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => WeatherScreen(lat: '31.360835', long: '31.572778'),));
+                    },
                     icon: const Icon(Icons.wb_twighlight)),
                 IconButton(
                     onPressed: () {},
