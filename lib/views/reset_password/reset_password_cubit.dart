@@ -29,7 +29,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     emit(ConfirmOTPLoading());
     DioHelper.postData(url: 'otp/$otp', data: {}).then((value) {
       otpRespond = ResetPassModel.fromJson(value.data);
-      emit(ConfirmOTPSuccess(respond!));
+      emit(ConfirmOTPSuccess(otpRespond!));
     }).catchError((e) {
       emit(ConfirmOTPError(e.toString()));
       print(e.toString());
