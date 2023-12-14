@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import '../../models/login_model.dart';
+import '../../models/user_model.dart';
 import '../../services/dio.dart';
 import '../../services/shared.dart';
 
@@ -17,7 +17,7 @@ class LoginCubit extends Cubit<LoginState> {
     DioHelper.postData(
         url: 'login',
         data: {'email': email, 'password': password}).then((value) {
-      LoginModel loginRes = LoginModel.fromJson(value.data);
+      UserModel loginRes = UserModel.fromJson(value.data);
       if (loginRes.status == true) {
         CacheHelper.saveData('cachedEmail', email);
         CacheHelper.saveData('cachedPassword', password);

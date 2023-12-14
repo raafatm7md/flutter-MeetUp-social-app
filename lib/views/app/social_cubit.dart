@@ -1,19 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
-import 'package:social_app/models/message_model.dart';
-import 'package:social_app/models/post_model.dart';
+import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/social_screens/ai_chat.dart';
 import 'package:social_app/views/social_screens/chat.dart';
 import 'package:social_app/views/social_screens/feed.dart';
-import 'package:social_app/views/social_screens/new_post.dart';
 import 'package:social_app/views/social_screens/settings.dart';
 import 'package:social_app/views/social_screens/users.dart';
-import '../../models/login_model.dart';
+import '../../models/user_model.dart';
 part 'social_state.dart';
 
 class SocialCubit extends Cubit<SocialState> {
@@ -21,20 +17,22 @@ class SocialCubit extends Cubit<SocialState> {
 
   static SocialCubit get(context) => BlocProvider.of(context);
 
-  // User? model;
-  // void getUserData() {
-  //   emit(SocialGetUserLoading());
-  //   FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(CacheHelper.getData('uId'))
-  //       .get()
-  //       .then((value) {
-  //     model = UserModel.fromJson(value.data()!);
-  //     emit(SocialGetUserSuccess());
-  //   }).catchError((e) {
-  //     emit(SocialGetUserError(e.toString()));
-  //   });
-  // }
+  User? user;
+  void getUserData() {
+    emit(SocialGetUserLoading());
+    DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
+        .then((value) {
+      UserModel res = UserModel.fromJson(value.data);
+      if (res.status == true) {
+        user = res.user;
+        emit(SocialGetUserSuccess());
+      } else {
+        emit(SocialGetUserError('Check your connection'));
+      }
+    }).catchError((e) {
+      emit(SocialGetUserError(e.toString()));
+    });
+  }
 
   int currentIndex = 0;
   List<Widget> screens = [
@@ -42,7 +40,7 @@ class SocialCubit extends Cubit<SocialState> {
     const ChatScreen(),
     const UsersScreen(),
     const AIChatScreen(),
-    const SettingsScreen(),
+    SettingsScreen(),
   ];
   void changeBottomNav(int index) {
     currentIndex = index;
@@ -78,43 +76,6 @@ class SocialCubit extends Cubit<SocialState> {
     }
   }
 
-  // String coverImgUrl = '';
-  // void uploadCover() {
-  //   firebase_storage.FirebaseStorage.instance
-  //       .ref()
-  //       .child('users/${Uri.file(coverImage!.path).pathSegments.last}')
-  //       .putFile(coverImage!)
-  //       .then((value) {
-  //     value.ref.getDownloadURL().then((value) {
-  //       coverImgUrl = value;
-  //       updateCover();
-  //       emit(SocialUploadCoverImageSuccess());
-  //     }).catchError((e) {
-  //       emit(SocialUploadCoverImageError());
-  //     });
-  //   }).catchError((e) {
-  //     emit(SocialUploadCoverImageError());
-  //   });
-  // }
-  //
-  // String profileImgUrl = '';
-  // void uploadProfile() {
-  //   firebase_storage.FirebaseStorage.instance
-  //       .ref()
-  //       .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
-  //       .putFile(profileImage!)
-  //       .then((value) {
-  //     value.ref.getDownloadURL().then((value) {
-  //       profileImgUrl = value;
-  //       updateProfile();
-  //       emit(SocialUploadCoverImageSuccess());
-  //     }).catchError((e) {
-  //       emit(SocialUploadCoverImageError());
-  //     });
-  //   }).catchError((e) {
-  //     emit(SocialUploadCoverImageError());
-  //   });
-  // }
   //
   // void updateUser(
   //     {required String name, required String phone, required String bio}) {
@@ -173,6 +134,32 @@ class SocialCubit extends Cubit<SocialState> {
   void removePostImage() {
     postImage = null;
     emit(SocialRemovePostImage());
+  }
+
+  void sendEditedData({
+    String? newName,
+  }) {
+    DioHelper.postData(
+            url: 'profile/update',
+            data: {'name': newName},
+            token: CacheHelper.getData('token'))
+        .then((value) {
+          print(newName);
+      user?.name = newName;
+      emit(SocialShowProfile());
+    }).catchError((e) {
+      emit(SocialUpdateUserError());
+    });
+  }
+
+  void editProfile() {
+    emit(SocialEditingProfile());
+  }
+
+  void logout() {
+    DioHelper.postData(
+        url: 'logout', data: {}, token: CacheHelper.getData('token'));
+    CacheHelper.removeData('token');
   }
 
   // void uploadPost({

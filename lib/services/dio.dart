@@ -16,7 +16,7 @@ class DioHelper {
       String? token}) async {
     dio.options.headers = {
       'Accept': 'application/json',
-      'access_token': token,
+      'Authorization': token,
     };
     return await dio.get(url, queryParameters: query);
   }
@@ -28,7 +28,7 @@ class DioHelper {
       String? token}) async {
     dio.options.headers = {
       'Accept': 'application/json',
-      'access_token': token,
+      'Authorization': token,
     };
     return await dio.post(url, queryParameters: query, data: data);
   }
@@ -40,7 +40,7 @@ class DioHelper {
       String? token}) async {
     dio.options.headers = {
       'Accept': 'application/json',
-      'access_token': token,
+      'Authorization': token,
     };
     return await dio.put(url, queryParameters: query, data: data);
   }

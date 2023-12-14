@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
-import 'package:social_app/models/login_model.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/services/dio.dart';
 
 import '../../services/shared.dart';
@@ -26,10 +26,10 @@ class RegisterCubit extends Cubit<RegisterState> {
         'longitude': userLocation?.longitude,
         'latitude': userLocation?.latitude
       }).then((value) {
-        LoginModel registerRes = LoginModel.fromJson(value.data);
+        UserModel registerRes = UserModel.fromJson(value.data);
         if (registerRes.status == true) {
           CacheHelper.saveData('cachedPassword', password);
-          CacheHelper.saveData('cachedEmail', password);
+          CacheHelper.saveData('cachedEmail', email);
           emit(RegisterSuccess(registerRes.user!.token!));
         } else
           emit(RegisterError(registerRes.errors![0]));

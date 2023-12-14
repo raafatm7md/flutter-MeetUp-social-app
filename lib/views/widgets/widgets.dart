@@ -29,12 +29,14 @@ Widget appTextFormField({
   bool isPassword = false,
   void Function(String)? onSubmit,
   void Function()? onTap,
-  Widget? suffix
+  Widget? suffix,
+  bool fixed = false
 }) =>
     TextFormField(
       obscureText: isPassword,
       controller: fieldController,
       keyboardType: inputType,
+      enabled: !fixed,
       validator: (value) {
         if (type == 'email'){
           if (isEmail(value!)) {

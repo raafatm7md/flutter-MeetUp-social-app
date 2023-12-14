@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/message_model.dart';
-import 'package:social_app/models/login_model.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 
 class ChatDetailsScreen extends StatelessWidget {

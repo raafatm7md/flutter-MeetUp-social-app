@@ -74,3 +74,7 @@ class SocialSendMessageSuccess extends SocialState {}
 class SocialSendMessageError extends SocialState {}
 
 class SocialGetMessagesSuccess extends SocialState {}
+
+class SocialShowProfile extends SocialState {}
+
+class SocialEditingProfile extends SocialState {}

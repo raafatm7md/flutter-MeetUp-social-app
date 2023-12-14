@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:social_app/models/login_model.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/widgets/widgets.dart';
 
@@ -102,7 +102,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
           }).then((value) {
             loadingState = false;
             setState(() {});
-            var res = LoginModel.fromJson(value.data);
+            var res = UserModel.fromJson(value.data);
             if (res.status == true) {
               CacheHelper.saveData('token', res.user?.token).then((value) {
                 Navigator.pushAndRemoveUntil(

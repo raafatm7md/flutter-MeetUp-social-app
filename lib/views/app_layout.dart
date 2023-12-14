@@ -10,7 +10,7 @@ class SocialLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit(),
+      create: (context) => SocialCubit()..getUserData(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
           if (state is SocialNewPost) {
@@ -28,7 +28,13 @@ class SocialLayout extends StatelessWidget {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => WeatherScreen(lat: '31.360835', long: '31.572778'),));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WeatherScreen(
+                                lat: '${cubit.user?.latitude}',
+                                long: '${cubit.user?.longitude}'),
+                          ));
                     },
                     icon: const Icon(Icons.wb_twighlight)),
                 IconButton(
@@ -39,9 +45,11 @@ class SocialLayout extends StatelessWidget {
               ],
               title: Text(cubit.titles[cubit.currentIndex]),
             ),
-            body: cubit.screens[cubit.currentIndex],
+            body: cubit.user != null ? cubit.screens[cubit.currentIndex]: Center(child: CircularProgressIndicator(),),
             bottomNavigationBar: ClipRRect(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0)),
               child: BottomNavigationBar(
                 backgroundColor: Colors.grey[900],
                 showUnselectedLabels: false,
@@ -51,14 +59,17 @@ class SocialLayout extends StatelessWidget {
                   cubit.changeBottomNav(value);
                 },
                 items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-                  BottomNavigationBarItem(icon: Icon(Icons.chat_outlined), label: 'Chat'),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person_pin_circle_outlined), label: 'Users'),
+                      icon: Icon(Icons.home_outlined), label: 'Home'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_outlined), label: 'Chat'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.person_pin_circle_outlined),
+                      label: 'Users'),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.insert_emoticon_outlined), label: 'AI'),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.settings_outlined), label: 'Settings'),
+                      icon: Icon(Icons.person_outlined), label: 'Profile'),
                 ],
               ),
             ),
