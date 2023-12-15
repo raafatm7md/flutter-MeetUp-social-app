@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/onboarding.dart';
 import 'package:social_app/views/widgets/widgets.dart';
+
+import '../../services/dio.dart';
+import '../../services/shared.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({super.key});
@@ -66,8 +71,8 @@ class SettingsScreen extends StatelessWidget {
                         child: OutlinedButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                SocialCubit.get(context)
-                                    .sendEditedData(newName: nameController.text);
+                                SocialCubit.get(context).sendEditedData(
+                                    newName: nameController.text);
                               }
                             },
                             child: Text('Done')),
@@ -78,8 +83,7 @@ class SettingsScreen extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: OutlinedButton(
-                            onPressed: () {},
-                            child: Text('Reset password')),
+                            onPressed: () {}, child: Text('Reset password')),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -100,8 +104,7 @@ class SettingsScreen extends StatelessWidget {
                                       backgroundColor: Colors.black,
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0,
-                                            vertical: 10.0),
+                                            horizontal: 20.0, vertical: 10.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           crossAxisAlignment:
@@ -111,8 +114,7 @@ class SettingsScreen extends StatelessWidget {
                                                 style: TextStyle(
                                                     color: Colors.red,
                                                     fontSize: 25.0)),
-                                            Text(
-                                                'Please enter your password',
+                                            Text('Please enter your password',
                                                 style: TextStyle(
                                                     color: Colors.red)),
                                             Form(
@@ -120,12 +122,17 @@ class SettingsScreen extends StatelessWidget {
                                               child: TextFormField(
                                                   controller:
                                                       passwordController,
-                                                  keyboardType:
-                                                      TextInputType
-                                                          .visiblePassword,
+                                                  keyboardType: TextInputType
+                                                      .visiblePassword,
                                                   obscureText: true,
-                                                  decoration:
-                                                      InputDecoration(
+                                                  validator: (value) {
+                                                    if (value!.length < 8 ||
+                                                        value.length > 30) {
+                                                      return "Please enter the password correctly";
+                                                    }
+                                                    return null;
+                                                  },
+                                                  decoration: InputDecoration(
                                                     label: Text('password'),
                                                     prefixIcon: Icon(
                                                       Icons.lock,
@@ -141,8 +148,48 @@ class SettingsScreen extends StatelessWidget {
                                               children: [
                                                 OutlinedButton(
                                                   onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop();
+                                                    if (passFormKey
+                                                        .currentState!
+                                                        .validate()) {
+                                                      DioHelper.deleteData(
+                                                          url: 'profile/delete',
+                                                          token: CacheHelper
+                                                              .getData('token'),
+                                                          query: {
+                                                            'password':
+                                                                passwordController
+                                                                    .text
+                                                          }).then((value) {
+                                                            UserModel res = UserModel.fromJson(value.data);
+                                                            if (res.status == true){
+                                                              CacheHelper.removeData('token');
+                                                              Navigator.pushAndRemoveUntil(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        OnBoardingScreen(),
+                                                                  ),
+                                                                      (route) => false);
+                                                            }
+                                                            Fluttertoast.showToast(
+                                                                msg: res.message!,
+                                                                toastLength: Toast.LENGTH_SHORT,
+                                                                gravity: ToastGravity.BOTTOM,
+                                                                timeInSecForIosWeb: 1,
+                                                                backgroundColor: Colors.red,
+                                                                textColor: Colors.white,
+                                                                fontSize: 16.0);
+                                                      }).catchError((e) {
+                                                        Fluttertoast.showToast(
+                                                            msg: 'Check your internet connection',
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.BOTTOM,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.red,
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0);
+                                                      });
+                                                    }
                                                   },
                                                   child: Text(
                                                     'Delete',
@@ -155,8 +202,7 @@ class SettingsScreen extends StatelessWidget {
                                                 ),
                                                 OutlinedButton(
                                                   onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop();
+                                                    Navigator.of(context).pop();
                                                   },
                                                   child: Text('Close'),
                                                 ),
@@ -183,8 +229,7 @@ class SettingsScreen extends StatelessWidget {
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        OnBoardingScreen(),
+                                    builder: (context) => OnBoardingScreen(),
                                   ),
                                   (route) => false);
                             },
@@ -249,9 +294,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                  onPressed: () {
-                                    SocialCubit.get(context).getProfileImage();
-                                  },
+                                  onPressed: () {},
                                   icon: const CircleAvatar(
                                     backgroundColor: Colors.white,
                                     foregroundColor: Colors.deepPurple,

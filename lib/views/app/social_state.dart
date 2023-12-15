@@ -14,6 +14,8 @@ class SocialGetUserError extends SocialState {
   SocialGetUserError(this.error);
 }
 
+class SocialGetUserTokenError extends SocialState {}
+
 class SocialGetAllUsersLoading extends SocialState {}
 
 class SocialGetAllUsersSuccess extends SocialState {}
@@ -78,3 +80,9 @@ class SocialGetMessagesSuccess extends SocialState {}
 class SocialShowProfile extends SocialState {}
 
 class SocialEditingProfile extends SocialState {}
+
+class SocialDeleteAccountLoading extends SocialState {}
+
+class SocialDeleteAccountSuccess extends SocialState {}
+
+class SocialDeleteAccountError extends SocialState {}

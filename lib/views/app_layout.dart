@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
 import 'package:social_app/views/social_screens/weather.dart';
+
+import '../services/shared.dart';
+import 'onboarding.dart';
 
 class SocialLayout extends StatelessWidget {
   const SocialLayout({super.key});
@@ -13,12 +17,23 @@ class SocialLayout extends StatelessWidget {
       create: (context) => SocialCubit()..getUserData(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
-          if (state is SocialNewPost) {
-            Navigator.push(
+          if (state is SocialGetUserTokenError) {
+            Fluttertoast.showToast(
+                msg: 'Invalid token',
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 5,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            CacheHelper.removeData('token');
+            Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewPostScreen(),
-                ));
+                  builder: (context) =>
+                      OnBoardingScreen(),
+                ),
+                    (route) => false);
           }
         },
         builder: (context, state) {
