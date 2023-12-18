@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/models/post_model.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
 
@@ -12,52 +12,62 @@ class FeedScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
+        RefreshController _refreshController = RefreshController(initialRefresh: false);
         return true
             ? Scaffold(
-                body: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      // Card(
-                      //   clipBehavior: Clip.antiAliasWithSaveLayer,
-                      //   elevation: 10.0,
-                      //   margin: const EdgeInsets.all(8.0),
-                      //   child: Stack(
-                      //     alignment: AlignmentDirectional.bottomEnd,
-                      //     children: [
-                      //       Image(
-                      //         image: NetworkImage(
-                      //             'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2023/04/BMD-4471.png'),
-                      //         fit: BoxFit.cover,
-                      //         height: 200,
-                      //         width: double.infinity,
-                      //       ),
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(8.0),
-                      //         child: Text(
-                      //           'communicate with friends',
-                      //           style: Theme.of(context)
-                      //               .textTheme
-                      //               .subtitle1
-                      //               ?.copyWith(color: Colors.white),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => buildPostItem(context),
-                        itemCount: 10,
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 8.0,
+                body: SmartRefresher(
+                  enablePullDown: true,
+                  header: 	MaterialClassicHeader(),
+                  controller: _refreshController,
+                  onRefresh: () async {
+                    await Future.delayed(Duration(milliseconds: 1000));
+                    _refreshController.refreshCompleted();
+                  },
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        // Card(
+                        //   clipBehavior: Clip.antiAliasWithSaveLayer,
+                        //   elevation: 10.0,
+                        //   margin: const EdgeInsets.all(8.0),
+                        //   child: Stack(
+                        //     alignment: AlignmentDirectional.bottomEnd,
+                        //     children: [
+                        //       Image(
+                        //         image: NetworkImage(
+                        //             'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2023/04/BMD-4471.png'),
+                        //         fit: BoxFit.cover,
+                        //         height: 200,
+                        //         width: double.infinity,
+                        //       ),
+                        //       Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: Text(
+                        //           'communicate with friends',
+                        //           style: Theme.of(context)
+                        //               .textTheme
+                        //               .subtitle1
+                        //               ?.copyWith(color: Colors.white),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => buildPostItem(context),
+                          itemCount: 10,
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 8.0,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      )
-                    ],
+                        const SizedBox(
+                          height: 8.0,
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 floatingActionButton: FloatingActionButton(

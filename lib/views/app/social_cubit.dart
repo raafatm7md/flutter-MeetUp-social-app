@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/services/dio.dart';
+import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/social_screens/ai_chat.dart';
 import 'package:social_app/views/social_screens/chat.dart';
@@ -80,6 +81,7 @@ class SocialCubit extends Cubit<SocialState> {
   }
 
   void logout() {
+    GoogleSignInService.logout();
     DioHelper.postData(
         url: 'logout', data: {}, token: CacheHelper.getData('token'));
     CacheHelper.removeData('token');

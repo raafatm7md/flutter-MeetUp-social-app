@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/models/user_model.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:social_app/views/app/social_cubit.dart';
-import 'package:social_app/views/social_screens/chat_details.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -12,23 +11,32 @@ class ChatScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        // var users;
+        RefreshController _refreshController =
+            RefreshController(initialRefresh: false);
         return true
-            ? ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) =>
-                    buildChatItem(context),
-                separatorBuilder: (context, index) => Padding(
-                      padding: const EdgeInsetsDirectional.only(
-                        start: 20.0,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        height: 1.0,
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                itemCount: 10)
+            ? SmartRefresher(
+                enablePullDown: true,
+                header: MaterialClassicHeader(),
+                controller: _refreshController,
+                onRefresh: () async {
+                  await Future.delayed(Duration(milliseconds: 1000));
+                  _refreshController.refreshCompleted();
+                },
+                child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => buildChatItem(context),
+                    separatorBuilder: (context, index) => Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 20.0,
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            height: 1.0,
+                            color: Colors.grey[300],
+                          ),
+                        ),
+                    itemCount: 10),
+              )
             : const Center(
                 child: CircularProgressIndicator(),
               );
@@ -48,7 +56,10 @@ class ChatScreen extends StatelessWidget {
               const SizedBox(
                 width: 15,
               ),
-              Text('user.name!', style: TextStyle(color: Colors.white),),
+              Text(
+                'user.name!',
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
