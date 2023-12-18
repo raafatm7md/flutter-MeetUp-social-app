@@ -8,7 +8,7 @@ import 'package:social_app/views/social_screens/ai_chat.dart';
 import 'package:social_app/views/social_screens/chat.dart';
 import 'package:social_app/views/social_screens/feed.dart';
 import 'package:social_app/views/social_screens/settings.dart';
-import 'package:social_app/views/social_screens/users.dart';
+import 'package:social_app/views/social_screens/map.dart';
 import '../../models/user_model.dart';
 part 'social_state.dart';
 
@@ -38,7 +38,7 @@ class SocialCubit extends Cubit<SocialState> {
   List<Widget> screens = [
     const FeedScreen(),
     const ChatScreen(),
-    const UsersScreen(),
+    const MapScreen(),
     const AIChatScreen(),
     SettingsScreen(),
   ];
@@ -47,7 +47,7 @@ class SocialCubit extends Cubit<SocialState> {
     emit(SocialChangeBottomNav());
   }
 
-  List<String> titles = ['Home', 'Chat', 'Users Map', 'AI', 'Profile'];
+  List<String> titles = ['Home', 'Chat', 'Map', 'AI', 'Profile'];
 
   void updateData({
     String? newName,
@@ -58,14 +58,12 @@ class SocialCubit extends Cubit<SocialState> {
             url: 'profile/update',
             data: {
               'name': newName,
-              'image': null,
-              'cover': null,
               'longitude': longitude,
               'latitude': latitude
             },
             token: CacheHelper.getData('token'))
         .then((value) {
-          print(value.data);
+      print(value.data);
       UserModel res = UserModel.fromJson(value.data);
       if (res.status == true) {
         user = res.user;
@@ -89,7 +87,6 @@ class SocialCubit extends Cubit<SocialState> {
     CacheHelper.removeData('token');
   }
 
-
   Future<void> updateLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -107,11 +104,10 @@ class SocialCubit extends Cubit<SocialState> {
     if (permission == LocationPermission.deniedForever) {
       return;
     }
-    await Geolocator.getCurrentPosition()
-        .then((value) {
+    await Geolocator.getCurrentPosition().then((value) {
       Position userLocation = value;
-      updateData(latitude: userLocation.latitude, longitude: userLocation.longitude);
-    })
-        .catchError((e) {});
+      updateData(
+          latitude: userLocation.latitude, longitude: userLocation.longitude);
+    }).catchError((e) {});
   }
 }

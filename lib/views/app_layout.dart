@@ -85,7 +85,7 @@ class SocialLayout extends StatelessWidget {
                       icon: Icon(Icons.chat_outlined), label: 'Chat'),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person_pin_circle_outlined),
-                      label: 'Users'),
+                      label: 'Map'),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.insert_emoticon_outlined), label: 'AI'),
                   BottomNavigationBarItem(
