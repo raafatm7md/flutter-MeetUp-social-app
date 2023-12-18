@@ -14,10 +14,18 @@ class SocialLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserData(),
+      create: (context) => SocialCubit()
+        ..getUserData()
+        ..updateLocation(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
           if (state is SocialGetUserTokenError) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OnBoardingScreen(),
+                ),
+                (route) => false);
             Fluttertoast.showToast(
                 msg: 'Invalid token',
                 toastLength: Toast.LENGTH_LONG,
@@ -27,13 +35,6 @@ class SocialLayout extends StatelessWidget {
                 textColor: Colors.white,
                 fontSize: 16.0);
             CacheHelper.removeData('token');
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      OnBoardingScreen(),
-                ),
-                    (route) => false);
           }
         },
         builder: (context, state) {
@@ -60,7 +61,11 @@ class SocialLayout extends StatelessWidget {
               ],
               title: Text(cubit.titles[cubit.currentIndex]),
             ),
-            body: cubit.user != null ? cubit.screens[cubit.currentIndex]: Center(child: CircularProgressIndicator(),),
+            body: cubit.user != null
+                ? cubit.screens[cubit.currentIndex]
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
             bottomNavigationBar: ClipRRect(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),

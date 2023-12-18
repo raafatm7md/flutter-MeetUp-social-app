@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
@@ -64,6 +65,7 @@ class SocialCubit extends Cubit<SocialState> {
             },
             token: CacheHelper.getData('token'))
         .then((value) {
+          print(value.data);
       UserModel res = UserModel.fromJson(value.data);
       if (res.status == true) {
         user = res.user;
@@ -85,5 +87,31 @@ class SocialCubit extends Cubit<SocialState> {
     DioHelper.postData(
         url: 'logout', data: {}, token: CacheHelper.getData('token'));
     CacheHelper.removeData('token');
+  }
+
+
+  Future<void> updateLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+    await Geolocator.getCurrentPosition()
+        .then((value) {
+      Position userLocation = value;
+      updateData(latitude: userLocation.latitude, longitude: userLocation.longitude);
+    })
+        .catchError((e) {});
   }
 }
