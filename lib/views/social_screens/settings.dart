@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/onboarding.dart';
+import 'package:social_app/views/social_screens/reset_password.dart';
 import 'package:social_app/views/widgets/widgets.dart';
 
 import '../../services/dio.dart';
@@ -71,7 +72,7 @@ class SettingsScreen extends StatelessWidget {
                         child: OutlinedButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                SocialCubit.get(context).sendEditedData(
+                                SocialCubit.get(context).updateData(
                                     newName: nameController.text);
                               }
                             },
@@ -83,7 +84,10 @@ class SettingsScreen extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: OutlinedButton(
-                            onPressed: () {}, child: Text('Reset password')),
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(),));
+                            },
+                            child: Text('Reset password')),
                       ),
                       SizedBox(
                         height: 20.0,

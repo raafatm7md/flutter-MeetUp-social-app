@@ -1,4 +1,4 @@
-package com.example.social_app
+package com.meetup.app
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

@@ -47,17 +47,29 @@ class SocialCubit extends Cubit<SocialState> {
 
   List<String> titles = ['Home', 'Chat', 'Users Map', 'AI', 'Profile'];
 
-  void sendEditedData({
+  void updateData({
     String? newName,
+    double? longitude,
+    double? latitude,
   }) {
     DioHelper.postData(
             url: 'profile/update',
-            data: {'name': newName},
+            data: {
+              'name': newName,
+              'image': null,
+              'cover': null,
+              'longitude': longitude,
+              'latitude': latitude
+            },
             token: CacheHelper.getData('token'))
         .then((value) {
-      print(newName);
-      user?.name = newName;
-      emit(SocialShowProfile());
+      UserModel res = UserModel.fromJson(value.data);
+      if (res.status == true) {
+        user = res.user;
+        emit(SocialShowProfile());
+      } else {
+        emit(SocialUpdateUserError());
+      }
     }).catchError((e) {
       emit(SocialUpdateUserError());
     });

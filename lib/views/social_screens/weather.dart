@@ -41,9 +41,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       SizedBox(
                         width: 5.0,
                       ),
-                      Text(
-                        '${weather.location!.name!} - ${weather.location!.country!}',
-                        style: TextStyle(color: Colors.deepPurple, fontSize: 20.0),
+                      Expanded(
+                        child: Text(
+                          '${weather.location!.name!} - ${weather.location!.country!}',
+                          style: TextStyle(color: Colors.deepPurple, fontSize: 20.0),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       )
                     ],
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/views/login_signup_screens/face_id.dart';
 import 'package:social_app/views/login_signup_screens/fingerprint_login.dart';
 import 'package:social_app/views/login_signup_screens/login_screen.dart';
@@ -81,7 +82,10 @@ class OnBoardingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FloatingActionButton.small(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var user = await GoogleSignInService.login();
+                    print(user);
+                  },
                   heroTag: 'google',
                   backgroundColor: Colors.deepPurpleAccent,
                   child: Image.asset('assets/pics/Google__G__Logo.png',
