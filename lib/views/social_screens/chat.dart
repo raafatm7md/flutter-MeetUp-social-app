@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:social_app/views/app/social_cubit.dart';
 
+import 'chat_details.dart';
+
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
@@ -51,7 +53,7 @@ class ChatScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25.0,
-                backgroundImage: NetworkImage('user.image!'),
+                // backgroundImage: NetworkImage('user.image!'),
               ),
               const SizedBox(
                 width: 15,
@@ -63,12 +65,12 @@ class ChatScreen extends StatelessWidget {
             ],
           ),
         ),
-        // onTap: () {
-        //   Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => ChatDetailsScreen(user: user),
-        //       ));
-        // },
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatDetailsScreen(),
+              ));
+        },
       );
 }

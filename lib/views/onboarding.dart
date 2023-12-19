@@ -85,6 +85,12 @@ class OnBoardingScreen extends StatelessWidget {
                   onPressed: () async {
                     var user = await GoogleSignInService.login();
                     print(user);
+                    user?.authentication.then((value) {
+                      print('access');
+                      print(value.accessToken);
+                      print('id');
+                      print(value.idToken);
+                    });
                   },
                   heroTag: 'google',
                   backgroundColor: Colors.deepPurpleAccent,

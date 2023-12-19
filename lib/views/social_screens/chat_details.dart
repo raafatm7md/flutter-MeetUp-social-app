@@ -1,15 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/models/message_model.dart';
-import 'package:social_app/models/user_model.dart';
 import 'package:social_app/views/app/social_cubit.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class ChatDetailsScreen extends StatelessWidget {
-  final User user;
+class ChatDetailsScreen extends StatefulWidget {
+  // final User user;
+  ChatDetailsScreen({super.key});
 
-  ChatDetailsScreen({super.key, required this.user});
+  @override
+  State<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
+}
 
-  var messageController = TextEditingController();
+class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
+  final IO.Socket socket = IO.io('https://social-app-chat.onrender.com');
+  final TextEditingController messageController = TextEditingController();
+  connectSocket (){
+    socket.onConnect((data) => Fluttertoast.showToast(
+        msg: 'Connection established',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0));
+    socket.onConnectError((data) => Fluttertoast.showToast(
+        msg: 'Connect Error: $data',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0));
+    socket.onDisconnect((data) => Fluttertoast.showToast(
+        msg: 'Socket.IO server disconnected',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // var messageController = TextEditingController();
+    // var scrollController = ScrollController();
+    connectSocket();
+  }
+  //
+  // void initSocket(){
+  //   try {
+  //     IO.Socket socket = IO.io('https://social-app-chat.onrender.com/');
+  //     socket.onConnect((_) {
+  //       print('connect');
+  //       socket.emit('join_room', '1');
+  //     });
+  //     socket.on('reseve_message', (data) => print(data));
+  //     socket.onDisconnect((_) => print('disconnect'));
+  //     socket.on('fromServer', (_) => print(_));
+  //     print('done');
+  //   } catch (e) {
+  //     print('error');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +83,12 @@ class ChatDetailsScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20.0,
-                    backgroundImage: NetworkImage(user.image!),
+                    // backgroundImage: NetworkImage('widget.user.image'),
                   ),
                   const SizedBox(
                     width: 15.0,
                   ),
-                  Text(user.name!)
+                  Text('widget.user.name!')
                 ],
               ),
             ),
@@ -41,7 +97,7 @@ class ChatDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    messages.isNotEmpty ?
+                    false ?
                     Expanded(
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
@@ -64,7 +120,6 @@ class ChatDetailsScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: messageController,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'type your message here...'),
