@@ -20,7 +20,18 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is SocialProfileImageError){
+          Fluttertoast.showToast(
+              msg: 'Check your internet connection',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      },
       builder: (context, state) {
         var user = SocialCubit.get(context).user;
         nameController.text = user!.name!;
@@ -272,7 +283,9 @@ class SettingsScreen extends StatelessWidget {
                                       )),
                                 ),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      SocialCubit.get(context).updateProfileCover();
+                                    },
                                     icon: const CircleAvatar(
                                       backgroundColor: Colors.white,
                                       foregroundColor: Colors.deepPurple,
@@ -298,7 +311,9 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    SocialCubit.get(context).updateProfileImage();
+                                  },
                                   icon: const CircleAvatar(
                                     backgroundColor: Colors.white,
                                     foregroundColor: Colors.deepPurple,
