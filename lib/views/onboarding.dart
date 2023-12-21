@@ -83,14 +83,7 @@ class OnBoardingScreen extends StatelessWidget {
               children: [
                 FloatingActionButton.small(
                   onPressed: () async {
-                    var user = await GoogleSignInService.login();
-                    print(user);
-                    user?.authentication.then((value) {
-                      print('access');
-                      print(value.accessToken);
-                      print('id');
-                      print(value.idToken);
-                    });
+                    await GoogleSignInService.login();
                   },
                   heroTag: 'google',
                   backgroundColor: Colors.deepPurpleAccent,

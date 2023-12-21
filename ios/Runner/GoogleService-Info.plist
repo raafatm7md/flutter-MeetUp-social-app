@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>396987771355-q44o03s9qp9kbt8f4qn9ggo4uggig3m5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.396987771355-q44o03s9qp9kbt8f4qn9ggo4uggig3m5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>396987771355-0o29p44v24o65unah29ttajcfrtp3li8.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBn_Wif5H6wv4xHjoHvxDShkjmWLXjfTqM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>396987771355</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.meetup.app</string>
+	<key>PROJECT_ID</key>
+	<string>meetup-social-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>meetup-social-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:396987771355:ios:3afffe9d5be19009a71ffe</string>
+</dict>
+</plist>
