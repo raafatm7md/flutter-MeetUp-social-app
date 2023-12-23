@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/app_layout.dart';
-import 'package:social_app/views/login/login_cubit.dart';
 import 'package:social_app/views/widgets/widgets.dart';
-
+import '../cubits/login/login_cubit.dart';
 import 'forgot_password.dart';
 
 class LoginScreen extends StatelessWidget {

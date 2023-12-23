@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/app_layout.dart';
-import 'package:social_app/views/register/register_cubit.dart';
 import 'package:social_app/views/widgets/widgets.dart';
+import '../cubits/register/register_cubit.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});

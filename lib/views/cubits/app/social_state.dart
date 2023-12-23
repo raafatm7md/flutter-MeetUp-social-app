@@ -88,3 +88,5 @@ class SocialDeleteAccountSuccess extends SocialState {}
 class SocialDeleteAccountError extends SocialState {}
 
 class SocialNoImageSelected extends SocialState {}
+
+class MapMarkerCreated extends SocialState {}

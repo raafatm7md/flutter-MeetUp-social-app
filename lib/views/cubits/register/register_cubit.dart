@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta/meta.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/services/dio.dart';
-
-import '../../services/shared.dart';
-
+import '../../../services/shared.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {

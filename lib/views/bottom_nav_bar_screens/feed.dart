@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
+import '../cubits/app/social_cubit.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});

@@ -1,17 +1,24 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
-import 'package:social_app/views/social_screens/ai_chat.dart';
-import 'package:social_app/views/social_screens/chat.dart';
-import 'package:social_app/views/social_screens/feed.dart';
-import 'package:social_app/views/social_screens/settings.dart';
-import 'package:social_app/views/social_screens/map.dart';
-import '../../models/user_model.dart';
+import 'package:social_app/views/bottom_nav_bar_screens/ai_chat.dart';
+import 'package:social_app/views/bottom_nav_bar_screens/chat.dart';
+import 'package:social_app/views/bottom_nav_bar_screens/feed.dart';
+import 'package:social_app/views/bottom_nav_bar_screens/profile.dart';
+import 'package:social_app/views/bottom_nav_bar_screens/map.dart';
+import '../../../models/all_users_model.dart';
+import '../../../models/user_model.dart';
 part 'social_state.dart';
 
 class SocialCubit extends Cubit<SocialState> {
@@ -36,20 +43,38 @@ class SocialCubit extends Cubit<SocialState> {
     });
   }
 
+  List<Data>? allUsers;
+  void getAllUserData() {
+    emit(SocialGetAllUsersLoading());
+    DioHelper.getData(url: 'users/all', token: CacheHelper.getData('token'))
+        .then((value) {
+      AllUsers res = AllUsers.fromJson(value.data);
+      if (res.status == true) {
+        allUsers = res.data;
+        emit(SocialGetAllUsersSuccess());
+      } else {
+        emit(SocialGetUserTokenError());
+      }
+    }).catchError((e) {
+      print(e.toString());
+      emit(SocialGetAllUsersError('Check your internet connection'));
+    });
+  }
+
   int currentIndex = 0;
   List<Widget> screens = [
     const FeedScreen(),
     const ChatScreen(),
-    const MapScreen(),
     const AIChatScreen(),
-    SettingsScreen(),
+    const MapScreen(),
+    ProfileScreen(),
   ];
   void changeBottomNav(int index) {
     currentIndex = index;
     emit(SocialChangeBottomNav());
   }
 
-  List<String> titles = ['Home', 'Chat', 'Map', 'AI', 'Profile'];
+  List<String> titles = ['Home', 'Chat', 'AI', 'Map', 'Profile'];
 
   void updateData({
     String? newName,
@@ -124,7 +149,8 @@ class SocialCubit extends Cubit<SocialState> {
         'image': await MultipartFile.fromFile(imagePath, filename: fileName),
       });
 
-      dio.post(
+      dio
+          .post(
         'http://13.36.37.92/api/profile/update',
         data: formData,
         options: Options(
@@ -133,7 +159,8 @@ class SocialCubit extends Cubit<SocialState> {
             'Authorization': CacheHelper.getData('token'),
           },
         ),
-      ).then((value) {
+      )
+          .then((value) {
         UserModel res = UserModel.fromJson(value.data);
         if (res.status == true) {
           user = res.user;
@@ -141,7 +168,7 @@ class SocialCubit extends Cubit<SocialState> {
         } else {
           emit(SocialProfileImageError());
         }
-      }).catchError((e){
+      }).catchError((e) {
         emit(SocialProfileImageError());
       });
     } else {
@@ -162,7 +189,8 @@ class SocialCubit extends Cubit<SocialState> {
         'cover': await MultipartFile.fromFile(imagePath, filename: fileName),
       });
 
-      dio.post(
+      dio
+          .post(
         'http://13.36.37.92/api/profile/update',
         data: formData,
         options: Options(
@@ -171,7 +199,8 @@ class SocialCubit extends Cubit<SocialState> {
             'Authorization': CacheHelper.getData('token'),
           },
         ),
-      ).then((value) {
+      )
+          .then((value) {
         UserModel res = UserModel.fromJson(value.data);
         if (res.status == true) {
           user = res.user;
@@ -179,12 +208,108 @@ class SocialCubit extends Cubit<SocialState> {
         } else {
           emit(SocialCoverImageError());
         }
-      }).catchError((e){
+      }).catchError((e) {
         emit(SocialCoverImageError());
       });
     } else {
       print('No image selected');
       emit(SocialNoImageSelected());
     }
+  }
+
+  Set<Marker> mapMarkers = {};
+  List<dynamic> mapUsers = [];
+  createMarkers(BuildContext context) {
+    DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
+        .then((value) {
+      UserModel userRes = UserModel.fromJson(value.data);
+      mapUsers.add({
+        'name': 'Me',
+        'position': LatLng(userRes.user!.latitude!.toDouble(),
+            userRes.user!.longitude!.toDouble()),
+        'image': userRes.user!.image != null
+            ? '${userRes.user!.image}'
+            : 'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+      });
+
+      DioHelper.getData(url: 'users/all', token: CacheHelper.getData('token'))
+          .then((value) {
+        AllUsers allRes = AllUsers.fromJson(value.data);
+        allRes.data?.forEach((element) {
+          mapUsers.add({
+            'name': '${element.name}',
+            'position': LatLng(
+                element.latitude!.toDouble(), element.longitude!.toDouble()),
+            'image': element.image != null
+                ? '${element.image}'
+                : 'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+          });
+        });
+
+        Marker marker;
+
+        mapUsers.forEach((user) async {
+          marker = Marker(
+            markerId: MarkerId(user['name']),
+            position: user['position'],
+            icon: await _getImageIcon(context, user['image'])
+                .then((value) => value),
+            infoWindow: InfoWindow(
+              title: user['name'],
+            ),
+          );
+          mapMarkers.add(marker);
+          emit(MapMarkerCreated());
+        });
+      });
+    });
+  }
+
+  Future<BitmapDescriptor> _getImageIcon(
+      BuildContext context, String image) async {
+    final File markerImageFile =
+        await DefaultCacheManager().getSingleFile(image);
+    return convertImageFileToBitmapDescriptor(markerImageFile, size: 200);
+  }
+
+  static Future<BitmapDescriptor> convertImageFileToBitmapDescriptor(
+      File imageFile,
+      {int size = 100,
+      bool addBorder = false,
+      Color borderColor = Colors.white,
+      double borderSize = 10,
+      Color titleColor = Colors.transparent,
+      Color titleBackgroundColor = Colors.transparent}) async {
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    final Paint paint = Paint()..color;
+    final TextPainter textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+    final double radius = size / 2;
+
+    final Path clipPath = Path();
+    clipPath.addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+        Radius.circular(100)));
+    clipPath.addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(size / 2.toDouble(), size + 20.toDouble(), 10, 10),
+        Radius.circular(100)));
+    canvas.clipPath(clipPath);
+
+    final Uint8List imageUint8List = await imageFile.readAsBytes();
+    final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
+    final ui.FrameInfo imageFI = await codec.getNextFrame();
+    paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+        image: imageFI.image);
+
+    final _image = await pictureRecorder
+        .endRecording()
+        .toImage(size, (size * 1.1).toInt());
+    final data = await _image.toByteData(format: ui.ImageByteFormat.png);
+
+    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 }

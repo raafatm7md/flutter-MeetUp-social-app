@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:social_app/views/app/social_cubit.dart';
-import 'package:social_app/views/social_screens/new_post.dart';
+import 'package:social_app/views/social_screens/notifications.dart';
+import 'package:social_app/views/social_screens/search.dart';
 import 'package:social_app/views/social_screens/weather.dart';
-
 import '../services/shared.dart';
+import 'cubits/app/social_cubit.dart';
 import 'onboarding.dart';
 
 class SocialLayout extends StatelessWidget {
@@ -16,7 +16,9 @@ class SocialLayout extends StatelessWidget {
     return BlocProvider(
       create: (context) => SocialCubit()
         ..getUserData()
-        ..updateLocation(),
+        ..updateLocation()
+        ..getAllUserData()
+        ..createMarkers(context),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
           if (state is SocialGetUserTokenError) {
@@ -54,10 +56,23 @@ class SocialLayout extends StatelessWidget {
                     },
                     icon: const Icon(Icons.wb_twighlight)),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationsScreen(),
+                          ));
+                    },
                     icon: const Icon(Icons.notifications_active_outlined)),
                 IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.search_outlined)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchScreen(),
+                          ));
+                    },
+                    icon: const Icon(Icons.search_outlined)),
               ],
               title: Text(cubit.titles[cubit.currentIndex]),
             ),
@@ -84,10 +99,10 @@ class SocialLayout extends StatelessWidget {
                   BottomNavigationBarItem(
                       icon: Icon(Icons.chat_outlined), label: 'Chat'),
                   BottomNavigationBarItem(
+                      icon: Icon(Icons.insert_emoticon_outlined), label: 'AI'),
+                  BottomNavigationBarItem(
                       icon: Icon(Icons.person_pin_circle_outlined),
                       label: 'Map'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.insert_emoticon_outlined), label: 'AI'),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person_outlined), label: 'Profile'),
                 ],

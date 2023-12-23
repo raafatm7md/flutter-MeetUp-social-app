@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:social_app/views/reset_password/reset_password_cubit.dart';
+import '../cubits/reset_password/reset_password_cubit.dart';
 import '../widgets/widgets.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {

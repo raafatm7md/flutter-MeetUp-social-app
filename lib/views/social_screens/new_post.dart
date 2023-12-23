@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/models/user_model.dart';
-import 'package:social_app/views/app/social_cubit.dart';
+import '../cubits/app/social_cubit.dart';
 
 class NewPostScreen extends StatelessWidget {
   NewPostScreen({super.key});

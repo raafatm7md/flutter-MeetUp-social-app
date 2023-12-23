@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/reset_password_model.dart';
-import '../../services/dio.dart';
+import '../../../models/reset_password_model.dart';
+import '../../../services/dio.dart';
 part 'reset_password_state.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {

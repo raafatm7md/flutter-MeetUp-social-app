@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/views/app/social_cubit.dart';
 import 'package:social_app/views/onboarding.dart';
 import 'package:social_app/views/social_screens/reset_password.dart';
 import 'package:social_app/views/widgets/widgets.dart';
-
 import '../../services/dio.dart';
 import '../../services/shared.dart';
+import '../cubits/app/social_cubit.dart';
 
-class SettingsScreen extends StatelessWidget {
-  SettingsScreen({super.key});
+class ProfileScreen extends StatelessWidget {
+  ProfileScreen({super.key});
   var nameController = TextEditingController();
   var emailController = TextEditingController();
   var birthdayController = TextEditingController();
