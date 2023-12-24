@@ -16,6 +16,7 @@ class ChatScreen extends StatelessWidget {
         RefreshController _refreshController =
             RefreshController(initialRefresh: false);
         var users = SocialCubit.get(context).allUsers;
+        var myId = SocialCubit.get(context).user?.id;
         return users != null
             ? SmartRefresher(
                 enablePullDown: true,
@@ -23,11 +24,13 @@ class ChatScreen extends StatelessWidget {
                 controller: _refreshController,
                 onRefresh: () async {
                   await Future.delayed(Duration(milliseconds: 1000));
+                  SocialCubit.get(context).getAllUserData();
                   _refreshController.refreshCompleted();
                 },
                 child: ListView.separated(
                     physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => buildChatItem(context, users[index]),
+                    itemBuilder: (context, index) =>
+                        buildChatItem(context, users[index], myId!),
                     separatorBuilder: (context, index) => Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 20.0,
@@ -35,7 +38,7 @@ class ChatScreen extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             height: 1.0,
-                            color: Colors.grey[300],
+                            color: Colors.grey[800],
                           ),
                         ),
                     itemCount: users.length),
@@ -47,21 +50,22 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget buildChatItem(context, Data user) => InkWell(
+  Widget buildChatItem(context, Data user, int myId) => InkWell(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
             children: [
               CircleAvatar(
-                radius: 25.0,
-                // backgroundImage: NetworkImage(user.image!),
+                radius: 30.0,
+                backgroundImage: NetworkImage(user.image ??
+                    'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
               ),
               const SizedBox(
                 width: 15,
               ),
               Text(
                 user.name!,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
           ),
@@ -70,7 +74,10 @@ class ChatScreen extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ChatDetailsScreen(),
+                builder: (context) => ChatDetailsScreen(
+                  myId: myId,
+                  user: user,
+                ),
               ));
         },
       );

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -219,7 +221,7 @@ class SocialCubit extends Cubit<SocialState> {
 
   Set<Marker> mapMarkers = {};
   List<dynamic> mapUsers = [];
-  createMarkers(BuildContext context) {
+  createMarkers() {
     DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
         .then((value) {
       UserModel userRes = UserModel.fromJson(value.data);
@@ -252,8 +254,7 @@ class SocialCubit extends Cubit<SocialState> {
           marker = Marker(
             markerId: MarkerId(user['name']),
             position: user['position'],
-            icon: await _getImageIcon(context, user['image'])
-                .then((value) => value),
+            icon: await _getImageIcon(user['image']).then((value) => value),
             infoWindow: InfoWindow(
               title: user['name'],
             ),
@@ -265,28 +266,18 @@ class SocialCubit extends Cubit<SocialState> {
     });
   }
 
-  Future<BitmapDescriptor> _getImageIcon(
-      BuildContext context, String image) async {
+  Future<BitmapDescriptor> _getImageIcon(String image) async {
     final File markerImageFile =
         await DefaultCacheManager().getSingleFile(image);
     return convertImageFileToBitmapDescriptor(markerImageFile, size: 200);
   }
 
   static Future<BitmapDescriptor> convertImageFileToBitmapDescriptor(
-      File imageFile,
-      {int size = 100,
-      bool addBorder = false,
-      Color borderColor = Colors.white,
-      double borderSize = 10,
-      Color titleColor = Colors.transparent,
-      Color titleBackgroundColor = Colors.transparent}) async {
+    File imageFile, {
+    int size = 100,
+  }) async {
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color;
-    final TextPainter textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
-    final double radius = size / 2;
 
     final Path clipPath = Path();
     clipPath.addRRect(RRect.fromRectAndRadius(

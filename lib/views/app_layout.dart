@@ -18,7 +18,7 @@ class SocialLayout extends StatelessWidget {
         ..getUserData()
         ..updateLocation()
         ..getAllUserData()
-        ..createMarkers(context),
+        ..createMarkers(),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
           if (state is SocialGetUserTokenError) {

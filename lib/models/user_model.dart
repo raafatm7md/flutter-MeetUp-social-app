@@ -14,6 +14,7 @@ class UserModel {
 
 class User {
   String? name;
+  int? id;
   String? role;
   String? email;
   String? email_active;
@@ -26,6 +27,7 @@ class User {
 
   User({
     required this.name,
+    required this.id,
     required this.role,
     required this.email,
     required this.email_active,
@@ -39,6 +41,7 @@ class User {
 
   User.fromJson(Map<String, dynamic> json){
     name = json['name'];
+    id = json['id'];
     role = json['role'];
     email = json['email'];
     email_active = json['email_active'];
@@ -53,6 +56,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'id': id,
       'role': role,
       'email': email,
       'email_active': email_active,
