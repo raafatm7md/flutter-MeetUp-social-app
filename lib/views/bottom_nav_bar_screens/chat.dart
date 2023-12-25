@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:social_app/models/all_users_model.dart';
 import 'package:social_app/views/cubits/app/social_cubit.dart';
 import '../social_screens/chat_details.dart';
@@ -13,36 +12,24 @@ class ChatScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        RefreshController _refreshController =
-            RefreshController(initialRefresh: false);
         var users = SocialCubit.get(context).allUsers;
         var myId = SocialCubit.get(context).user?.id;
         return users != null
-            ? SmartRefresher(
-                enablePullDown: true,
-                header: MaterialClassicHeader(),
-                controller: _refreshController,
-                onRefresh: () async {
-                  await Future.delayed(Duration(milliseconds: 1000));
-                  SocialCubit.get(context).getAllUserData();
-                  _refreshController.refreshCompleted();
-                },
-                child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) =>
-                        buildChatItem(context, users[index], myId!),
-                    separatorBuilder: (context, index) => Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            start: 20.0,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            height: 1.0,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                    itemCount: users.length),
-              )
+            ? ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    buildChatItem(context, users[index], myId!),
+                separatorBuilder: (context, index) => Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 20.0,
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        height: 1.0,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                itemCount: users.length)
             : const Center(
                 child: CircularProgressIndicator(),
               );
