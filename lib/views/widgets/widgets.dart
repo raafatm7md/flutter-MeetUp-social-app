@@ -51,7 +51,7 @@ Widget appTextFormField({
           }
           return null;
         } else if (type == 'username'){
-          if (value!.isEmpty || value.contains(' ') || value.endsWith(' ') || value.startsWith(' ')) {
+          if (value!.isEmpty || value.contains(' ')) {
             return "Please enter available username";
           }
           return null;

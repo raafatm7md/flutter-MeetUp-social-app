@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:social_app/models/message_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -14,16 +16,17 @@ class ChatDetailsScreen extends StatefulWidget {
 
 class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final TextEditingController messageController = TextEditingController();
+  final List<Message> messages = [];
   String? roomId;
   IO.Socket? socket;
 
   @override
   void initState() {
     super.initState();
-    connectSocket();
     List<int> ids = [widget.myId, widget.user.id!];
     ids.sort();
     roomId = ids.join();
+    connectSocket();
   }
 
   @override
@@ -60,23 +63,27 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    false
+                    messages.length > 0
                         ? Expanded(
-                            child: ListView.separated(
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  // var message = messages[index];
-                                  // if (SocialCubit.get(context).model?.uId == message.senderId){
-                                  //   return buildMyMessage(message);
-                                  // }
-                                  // else {
-                                  //   return buildMessage(message);
-                                  // }
-                                },
-                                separatorBuilder: (context, index) => SizedBox(
-                                      height: 15,
-                                    ),
-                                itemCount: 10),
+                            child: SingleChildScrollView(
+                              reverse: true,
+                              child: ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    var message = messages[index];
+                                    if ('${widget.myId}' == message.auther) {
+                                      return buildMyMessage(message);
+                                    } else {
+                                      return buildMessage(message);
+                                    }
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                  itemCount: messages.length),
+                            ),
                           )
                         : Expanded(
                             child: Center(
@@ -85,23 +92,51 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               style: TextStyle(color: Colors.grey),
                             ),
                           )),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     Container(
                       height: 50,
                       child: Row(
                         children: [
                           Expanded(
                             child: TextFormField(
+                              controller: messageController,
+                              onFieldSubmitted: (value) {
+                                sendMessage().then((value) {
+                                  if (value == true) {
+                                    Future.delayed(Duration(milliseconds: 5000))
+                                        .then((value) {
+                                      socket?.emit('fetch_messages', roomId);
+                                    });
+                                  }
+                                });
+                                messageController.clear();
+                              },
                               decoration: InputDecoration(
-                                  border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(50)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(50)),
                                   fillColor: Colors.white24,
                                   filled: true,
                                   hintStyle: TextStyle(color: Colors.grey),
-                                  contentPadding: EdgeInsetsDirectional.only(start: 20.0, end: 10.0),
+                                  contentPadding: EdgeInsetsDirectional.only(
+                                      start: 20.0, end: 10.0),
                                   hintText: 'type your message here...'),
                             ),
                           ),
                           MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                sendMessage().then((value) {
+                                  if (value == true) {
+                                    Future.delayed(Duration(milliseconds: 5000))
+                                        .then((value) {
+                                      socket?.emit('fetch_messages', roomId);
+                                    });
+                                  }
+                                });
+                                messageController.clear();
+                              },
                               minWidth: 1,
                               color: Colors.deepPurple,
                               height: 50,
@@ -122,35 +157,36 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ));
   }
 
-  Widget buildMessage(MessageModel message) => Align(
+  Widget buildMessage(Message message) => Align(
         alignment: AlignmentDirectional.centerStart,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.grey[700],
               borderRadius: const BorderRadiusDirectional.only(
                 bottomEnd: Radius.circular(10.0),
                 topStart: Radius.circular(10.0),
                 topEnd: Radius.circular(10.0),
               )),
-          child: Text(message.text!, style: const TextStyle(fontSize: 18)),
+          child: Text(message.message!,
+              style: const TextStyle(fontSize: 22, color: Colors.white)),
         ),
       );
 
-  Widget buildMyMessage(MessageModel message) => Align(
+  Widget buildMyMessage(Message message) => Align(
         alignment: AlignmentDirectional.centerEnd,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
-              color: Colors.blue[300],
+              color: Colors.deepPurpleAccent,
               borderRadius: const BorderRadiusDirectional.only(
                 bottomStart: Radius.circular(10.0),
                 topStart: Radius.circular(10.0),
                 topEnd: Radius.circular(10.0),
               )),
           child: Text(
-            message.text!,
-            style: const TextStyle(fontSize: 18),
+            message.message!,
+            style: const TextStyle(fontSize: 22, color: Colors.white),
           ),
         ),
       );
@@ -163,6 +199,25 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     socket?.connect();
     socket?.onConnect((data) {
       print('Connection established');
+
+      socket?.on('joined', (data) => print(data));
+
+      socket?.on('reseve_message', (data) {
+        socket?.emit('fetch_messages', roomId);
+      });
+
+      socket?.on('display_messages', (data) {
+        messages.clear();
+        AllMessages res = AllMessages.fromJson(data);
+        res.allMessages?.forEach((element) {
+          setState(() {
+            messages.add(element);
+          });
+        });
+      });
+
+      socket?.emit('join_room', roomId);
+      socket?.emit('fetch_messages', roomId);
       setState(() {});
     });
     socket?.onConnectError((data) {
@@ -172,5 +227,18 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     socket?.onDisconnect((data) {
       print('Socket.IO server disconnected');
     });
+  }
+
+  Future<bool> sendMessage() async {
+    String message = messageController.text.trim();
+    if (message.isEmpty) return false;
+    Map messageMap = {
+      'message': message,
+      'auther': widget.myId,
+      'id': roomId,
+    };
+    socket?.emit('send_message', messageMap);
+    socket?.emit('fetch_messages', roomId);
+    return true;
   }
 }

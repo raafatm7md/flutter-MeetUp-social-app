@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 SocialCubit.get(context).updateData(
-                                    newName: nameController.text);
+                                    newName: nameController.text.trim());
                               }
                             },
                             child: Text('Done')),

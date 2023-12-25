@@ -1,29 +1,42 @@
-class MessageModel {
-  String? senderId;
-  String? receiverId;
-  String? dateTime;
-  String? text;
+class AllMessages {
+  List<Message>? allMessages;
 
-  MessageModel({
-    required this.senderId,
-    required this.receiverId,
-    required this.dateTime,
-    required this.text,
+  AllMessages({this.allMessages});
+
+  AllMessages.fromJson(json) {
+      allMessages = <Message>[];
+      json.forEach((v) {
+        allMessages!.add(new Message.fromJson(v));
+      });
+  }
+}
+
+class Message {
+  String? auther;
+  String? id;
+  String? message;
+  String? createdAt;
+
+  Message({
+    required this.auther,
+    required this.id,
+    required this.message,
+    required this.createdAt,
   });
 
-  MessageModel.fromJson(Map<String, dynamic> json){
-    senderId = json['senderId'];
-    receiverId = json['receiverId'];
-    dateTime = json['dateTime'];
-    text = json['text'];
+  Message.fromJson(Map<String, dynamic> json){
+    auther = json['auther'];
+    id = json['id'];
+    message = json['message'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'senderId': senderId,
-      'uId': receiverId,
-      'dateTime': dateTime,
-      'text': text,
+      'auther': auther,
+      'id': id,
+      'message': message,
+      'createdAt': createdAt,
     };
   }
 }
