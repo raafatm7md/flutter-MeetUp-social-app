@@ -7,7 +7,7 @@ class AllUsers {
 
   AllUsers.fromJson(Map<String, dynamic> json) {
     status = json['status'] ?? null;
-    message = json['message'] ?? null;
+    message = json['message'] ?? json['msg'] ?? null;
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {

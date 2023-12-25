@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social_app/views/social_screens/chat_details.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -221,11 +222,13 @@ class SocialCubit extends Cubit<SocialState> {
 
   Set<Marker> mapMarkers = {};
   List<dynamic> mapUsers = [];
-  createMarkers() {
+  createMarkers(BuildContext context) {
     DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
         .then((value) {
+          mapUsers.clear();
       UserModel userRes = UserModel.fromJson(value.data);
       mapUsers.add({
+        'id': userRes.user!.id,
         'name': 'Me',
         'position': LatLng(userRes.user!.latitude!.toDouble(),
             userRes.user!.longitude!.toDouble()),
@@ -239,6 +242,7 @@ class SocialCubit extends Cubit<SocialState> {
         AllUsers allRes = AllUsers.fromJson(value.data);
         allRes.data?.forEach((element) {
           mapUsers.add({
+            'id': element.id,
             'name': '${element.name}',
             'position': LatLng(
                 element.latitude!.toDouble(), element.longitude!.toDouble()),
@@ -247,7 +251,7 @@ class SocialCubit extends Cubit<SocialState> {
                 : 'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
           });
         });
-
+        mapMarkers.clear();
         Marker marker;
 
         mapUsers.forEach((user) async {
@@ -257,6 +261,16 @@ class SocialCubit extends Cubit<SocialState> {
             icon: await _getImageIcon(user['image']).then((value) => value),
             infoWindow: InfoWindow(
               title: user['name'],
+              snippet: user['id'] != userRes.user!.id ? 'Tap for chat' : 'It\'s me!',
+              onTap: () {
+                if (user['id'] != mapUsers[0]['id']){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatDetailsScreen(
+                          myId: mapUsers[0]['id'], user: allRes.data!.singleWhere((element) => element.id == user['id'])),
+                    ));}
+              },
             ),
           );
           mapMarkers.add(marker);

@@ -27,33 +27,6 @@ class FeedScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        // Card(
-                        //   clipBehavior: Clip.antiAliasWithSaveLayer,
-                        //   elevation: 10.0,
-                        //   margin: const EdgeInsets.all(8.0),
-                        //   child: Stack(
-                        //     alignment: AlignmentDirectional.bottomEnd,
-                        //     children: [
-                        //       Image(
-                        //         image: NetworkImage(
-                        //             'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2023/04/BMD-4471.png'),
-                        //         fit: BoxFit.cover,
-                        //         height: 200,
-                        //         width: double.infinity,
-                        //       ),
-                        //       Padding(
-                        //         padding: const EdgeInsets.all(8.0),
-                        //         child: Text(
-                        //           'communicate with friends',
-                        //           style: Theme.of(context)
-                        //               .textTheme
-                        //               .subtitle1
-                        //               ?.copyWith(color: Colors.white),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

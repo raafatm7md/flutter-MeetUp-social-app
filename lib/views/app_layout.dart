@@ -18,7 +18,7 @@ class SocialLayout extends StatelessWidget {
         ..getUserData()
         ..updateLocation()
         ..getAllUserData()
-        ..createMarkers(),
+        ..createMarkers(context),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {
           if (state is SocialGetUserTokenError) {
@@ -66,11 +66,14 @@ class SocialLayout extends StatelessWidget {
                     icon: const Icon(Icons.notifications_active_outlined)),
                 IconButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchScreen(),
-                          ));
+                      if (cubit.user != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchScreen(id: cubit.user!.id!),
+                            ));
+                      }
                     },
                     icon: const Icon(Icons.search_outlined)),
               ],
