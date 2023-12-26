@@ -19,6 +19,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final List<Message> messages = [];
   String? roomId;
   IO.Socket? socket;
+  bool typing = false;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             ? Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     messages.length > 0
                         ? Expanded(
@@ -92,6 +94,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               style: TextStyle(color: Colors.grey),
                             ),
                           )),
+                    typing? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('${widget.user.name} is typing ...', style: TextStyle(color: Colors.white)),
+                    ):
                     SizedBox(
                       height: 20.0,
                     ),
@@ -112,6 +118,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                                   }
                                 });
                                 messageController.clear();
+                              },
+                              onChanged: (value) {
+                                socket?.emit('typing', roomId);
                               },
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -204,6 +213,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
       socket?.on('reseve_message', (data) {
         socket?.emit('fetch_messages', roomId);
+      });
+
+      socket?.on('user_typing', (data) {
+        setState(() {
+          typing = true;
+        });
+        Future.delayed(Duration(seconds: 2)).then((value) {
+          setState(() {
+            typing = false;
+          });
+        });
       });
 
       socket?.on('display_messages', (data) {
