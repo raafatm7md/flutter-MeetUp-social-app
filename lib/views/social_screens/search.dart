@@ -8,7 +8,8 @@ import 'chat_details.dart';
 
 class SearchScreen extends StatelessWidget {
   final int id;
-  SearchScreen({super.key, required this.id});
+  final String myImg;
+  SearchScreen({super.key, required this.id, required this.myImg});
 
   var searchController = TextEditingController();
 
@@ -106,6 +107,7 @@ class SearchScreen extends StatelessWidget {
             builder: (context) => UserProfile(
               myID: id,
               user: user,
+              myImg: myImg,
             ),
           ));
     },

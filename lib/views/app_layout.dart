@@ -18,6 +18,7 @@ class SocialLayout extends StatelessWidget {
       create: (context) => SocialCubit()
         ..getUserData()
         ..updateLocation()
+        ..getAllPosts()
         ..getAllUserData()
         ..createMarkers(context),
       child: BlocConsumer<SocialCubit, SocialState>(
@@ -73,8 +74,11 @@ class SocialLayout extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  SearchScreen(id: cubit.user!.id!),
+                              builder: (context) => SearchScreen(
+                                id: cubit.user!.id!,
+                                myImg: cubit.user!.image ??
+                                    'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+                              ),
                             ));
                       }
                     },
@@ -91,6 +95,7 @@ class SocialLayout extends StatelessWidget {
                       await Future.delayed(Duration(milliseconds: 1000));
                       cubit.getUserData();
                       cubit.getAllUserData();
+                      cubit.getAllPosts();
                       cubit.createMarkers(context);
                       _refreshController.refreshCompleted();
                     },

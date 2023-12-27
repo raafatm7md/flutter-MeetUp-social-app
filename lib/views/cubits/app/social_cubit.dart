@@ -349,4 +349,11 @@ class SocialCubit extends Cubit<SocialState> {
   }
 
   List<Map<String, dynamic>> chatBotHistory = [];
+
+  void likePost(int postId) {
+    DioHelper.postData(
+        url: 'user/posts/$postId/react',
+        data: {},
+        token: CacheHelper.getData('token'));
+  }
 }
