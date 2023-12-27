@@ -366,7 +366,7 @@ class ProfileScreen extends StatelessWidget {
                         width: double.infinity,
                         child: OutlinedButton(
                             onPressed: () {
-                              (
+                              showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   var passwordController =
