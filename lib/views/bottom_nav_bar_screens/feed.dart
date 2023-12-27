@@ -51,7 +51,7 @@ class FeedScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NewPostScreen(),
+                          builder: (context) => NewPostScreen(user: cubit.user!),
                         ));
                   },
                   child: Icon(

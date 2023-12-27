@@ -152,7 +152,7 @@ class SocialCubit extends Cubit<SocialState> {
 
       dio
           .post(
-        'http://13.36.37.92/api/profile/update',
+        'http://13.36.37.63/api/profile/update',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',
@@ -192,7 +192,7 @@ class SocialCubit extends Cubit<SocialState> {
 
       dio
           .post(
-        'http://13.36.37.92/api/profile/update',
+        'http://13.36.37.63/api/profile/update',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',

@@ -8,6 +8,7 @@ import 'package:social_app/views/widgets/widgets.dart';
 import '../../services/dio.dart';
 import '../../services/shared.dart';
 import '../cubits/app/social_cubit.dart';
+import '../social_screens/new_post.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -341,7 +342,13 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NewPostScreen(user: user),
+                                  ));
+                            },
                             child: Text('Add Post'),
                           ),
                         ),

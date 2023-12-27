@@ -5,7 +5,7 @@ class ResetPassModel {
 
   ResetPassModel.fromJson(Map<String, dynamic> json){
     status = json['status'] ?? null;
-    message = json['message'] ?? null;
+    message = json['message'] ?? json['msg'] ?? null;
     errors = json['errors'] ?? null;
   }
 }
