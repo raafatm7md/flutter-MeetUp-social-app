@@ -6,7 +6,7 @@ class UserModel {
 
   UserModel.fromJson(Map<String, dynamic> json){
     status = json['status'];
-    message = json['message'] ?? null;
+    message = json['message'] ?? json['msg'] ?? null;
     errors = json['errors'] ?? null;
     user = json['data'] != null ? User.fromJson(json['data']): null;
   }

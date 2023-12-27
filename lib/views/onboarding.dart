@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social_app/models/user_model.dart';
+import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
+import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/login_signup_screens/face_id.dart';
 import 'package:social_app/views/login_signup_screens/fingerprint_login.dart';
+import 'package:social_app/views/login_signup_screens/google_birthday_reset.dart';
 import 'package:social_app/views/login_signup_screens/login_screen.dart';
 import 'package:social_app/views/login_signup_screens/register_screen.dart';
 import 'package:social_app/views/widgets/widgets.dart';
+
+import 'app_layout.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -83,7 +90,43 @@ class OnBoardingScreen extends StatelessWidget {
               children: [
                 FloatingActionButton.small(
                   onPressed: () async {
-                    await GoogleSignInService.login();
+                    var auth = await GoogleSignInService.login();
+                    if (auth.user?.uid != null) {
+                      DioHelper.postData(
+                          url: 'login/google/callback/${auth.user?.uid}',
+                          data: {}).then((value) {
+                        UserModel userRes = UserModel.fromJson(value.data);
+                        if (userRes.status == true) {
+                          if (userRes.user?.birthday == null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GoogleBirthdayReset(token: userRes.user!.token!),
+                                ));
+                          } else {
+                            CacheHelper.saveData('token', userRes.user?.token).then((value) {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SocialLayout(),
+                                  ),
+                                      (route) => false);
+                            });
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Something went wrong!',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 5,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      }).catchError((e) {
+                        print(e.toString());
+                      });
+                    }
                   },
                   heroTag: 'google',
                   backgroundColor: Colors.deepPurpleAccent,

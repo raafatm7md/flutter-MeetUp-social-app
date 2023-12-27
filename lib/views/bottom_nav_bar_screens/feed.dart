@@ -12,12 +12,14 @@ class FeedScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        RefreshController _refreshController = RefreshController(initialRefresh: false);
+        var cubit = SocialCubit.get(context);
+        RefreshController _refreshController =
+            RefreshController(initialRefresh: false);
         return true
             ? Scaffold(
                 body: SmartRefresher(
                   enablePullDown: true,
-                  header: 	MaterialClassicHeader(),
+                  header: MaterialClassicHeader(),
                   controller: _refreshController,
                   onRefresh: () async {
                     await Future.delayed(Duration(milliseconds: 1000));
@@ -30,7 +32,8 @@ class FeedScreen extends StatelessWidget {
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => buildPostItem(context),
+                          itemBuilder: (context, index) =>
+                              buildPostItem(context),
                           itemCount: 10,
                           separatorBuilder: (context, index) => const SizedBox(
                             height: 8.0,
@@ -259,8 +262,11 @@ class FeedScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 18.0,
-                            // backgroundImage: NetworkImage(
-                            //     'SocialCubit.get(context).model!.image!'),
+                            backgroundImage: NetworkImage(SocialCubit.get(
+                                        context)
+                                    .user
+                                    ?.image ??
+                                'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
                           ),
                           const SizedBox(
                             width: 15,
