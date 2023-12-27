@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/views/social_screens/chat_details.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class SocialCubit extends Cubit<SocialState> {
   static SocialCubit get(context) => BlocProvider.of(context);
 
   User? user;
+  List<Posts>? userPosts = [];
   void getUserData() {
     emit(SocialGetUserLoading());
     DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
@@ -35,12 +37,38 @@ class SocialCubit extends Cubit<SocialState> {
       UserModel res = UserModel.fromJson(value.data);
       if (res.status == true) {
         user = res.user;
+        DioHelper.getData(
+                url: 'user/${user?.id}/posts',
+                token: CacheHelper.getData('token'))
+            .then((value) {
+          PostsModel postsResponse = PostsModel.fromJson(value.data);
+          if (postsResponse.status == true) {
+            userPosts = postsResponse.data?.posts?.reversed.toList();
+          }
+        });
         emit(SocialGetUserSuccess());
       } else {
         emit(SocialGetUserTokenError());
       }
     }).catchError((e) {
       emit(SocialGetUserError('Check your internet connection'));
+    });
+  }
+
+  List<Posts>? allPosts = [];
+  void getAllPosts() {
+    emit(GetAllPostsLoading());
+    DioHelper.getData(url: 'posts', token: CacheHelper.getData('token'))
+        .then((value) {
+      PostsModel allPostsResponse = PostsModel.fromJson(value.data);
+      if (allPostsResponse.status == true) {
+        allPosts = allPostsResponse.data?.posts;
+        emit(GetAllPostsSuccess());
+      } else {
+        emit(GetAllPostsError());
+      }
+    }).catchError((e) {
+      emit(GetAllPostsError());
     });
   }
 
@@ -223,7 +251,7 @@ class SocialCubit extends Cubit<SocialState> {
   createMarkers(BuildContext context) {
     DioHelper.getData(url: 'profile/show', token: CacheHelper.getData('token'))
         .then((value) {
-          mapUsers.clear();
+      mapUsers.clear();
       UserModel userRes = UserModel.fromJson(value.data);
       mapUsers.add({
         'id': userRes.user!.id,
@@ -259,15 +287,19 @@ class SocialCubit extends Cubit<SocialState> {
             icon: await _getImageIcon(user['image']).then((value) => value),
             infoWindow: InfoWindow(
               title: user['name'],
-              snippet: user['id'] != userRes.user!.id ? 'Tap for chat' : 'It\'s me!',
+              snippet:
+                  user['id'] != userRes.user!.id ? 'Tap for chat' : 'It\'s me!',
               onTap: () {
-                if (user['id'] != mapUsers[0]['id']){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatDetailsScreen(
-                          myId: mapUsers[0]['id'], user: allRes.data!.singleWhere((element) => element.id == user['id'])),
-                    ));}
+                if (user['id'] != mapUsers[0]['id']) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetailsScreen(
+                            myId: mapUsers[0]['id'],
+                            user: allRes.data!.singleWhere(
+                                (element) => element.id == user['id'])),
+                      ));
+                }
               },
             ),
           );
@@ -315,4 +347,6 @@ class SocialCubit extends Cubit<SocialState> {
 
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
+
+  List<Map<String, dynamic>> chatBotHistory = [];
 }
