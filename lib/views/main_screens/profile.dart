@@ -42,19 +42,19 @@ class ProfileScreen extends StatelessWidget {
         birthdayController.text = user.birthday!;
 
         Widget buildPostItem(context, Posts post) => Card(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          elevation: 5.0,
-          color: Colors.purpleAccent.withOpacity(0.022),
-          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              elevation: 5.0,
+              color: Colors.purpleAccent.withOpacity(0.022),
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                        child: Column(
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -74,108 +74,225 @@ class ProfileScreen extends StatelessWidget {
                             )
                           ],
                         )),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                            child: Text(
-                              'Delete post',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0),
-                            ),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.black,
-                                    title: Text(
-                                      'Delete post?',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          DioHelper.deleteData(
-                                              url:
-                                              'post/${post.postId}/delete',
-                                              token: CacheHelper.getData(
-                                                  'token'))
-                                              .then((value) {
-                                            Fluttertoast.showToast(
-                                                msg: 'Deleted successfully',
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.green,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          });
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: Text(
-                                          'Delete',
-                                          style: TextStyle(color: Colors.red),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        PopupMenuButton(
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                                child: Text(
+                                  'Delete post',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0),
+                                ),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: Colors.black,
+                                        title: Text(
+                                          'Delete post?',
+                                          style: TextStyle(color: Colors.white),
                                         ),
-                                      ),
-                                    ],
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              DioHelper.deleteData(
+                                                      url:
+                                                          'post/${post.postId}/delete',
+                                                      token:
+                                                          CacheHelper.getData(
+                                                              'token'))
+                                                  .then((value) {
+                                                Fluttertoast.showToast(
+                                                    msg: 'Deleted successfully',
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                              });
+                                              Navigator.of(context)
+                                                  .pop(); // Close the dialog
+                                            },
+                                            child: Text(
+                                              'Delete',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                            })
+                                })
+                          ],
+                          child: const Icon(
+                            Icons.more_horiz,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
+                        ),
                       ],
-                      child: const Icon(
-                        Icons.more_horiz,
-                        color: Colors.white,
-                        size: 30.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 1,
+                        color: Colors.black,
                       ),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 1,
-                    color: Colors.black,
-                  ),
-                ),
-                if (post.postContent != null)
-                  Text(
-                    post.postContent!,
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                if (post.postImage != null)
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.0),
-                        image: DecorationImage(
-                          image: NetworkImage(post.postImage!),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    if (post.postContent != null)
+                      Text(
+                        post.postContent!,
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      ),
+                    if (post.postImage != null)
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.0),
+                            image: DecorationImage(
+                              image: NetworkImage(post.postImage!),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    post.totalLikes != 0 &&
+                                            post.reactedUserIds?.contains(
+                                                SocialCubit.get(context)
+                                                    .user
+                                                    ?.id)
+                                        ? Icons.thumb_up_alt
+                                        : Icons.thumb_up_alt_outlined,
+                                    size: 24.0,
+                                    color: Colors.blue,
+                                  ),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    '${post.totalLikes}',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16.0),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PostScreen(
+                                          post: post,
+                                          postUser: user,
+                                          myImg: user.image ??
+                                              'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+                                          myID: user.id!,
+                                        ),
+                                      ));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    const Icon(
+                                      Icons.chat_outlined,
+                                      size: 24.0,
+                                      color: Colors.amber,
+                                    ),
+                                    const SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      '${post.totalComments} comment',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18.0,
+                                  backgroundImage: NetworkImage(SocialCubit.get(
+                                              context)
+                                          .user
+                                          ?.image ??
+                                      'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'write a comment ...',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14.0),
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PostScreen(
+                                      post: post,
+                                      postUser: user,
+                                      myImg: user.image ??
+                                          'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+                                      myID: user.id!,
+                                    ),
+                                  ));
+                            },
+                          ),
+                        ),
+                        InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                post.totalLikes != 0 &&
-                                    post.reactedUserIds?.contains(
-                                        SocialCubit.get(context).user?.id)
-                                    ? Icons.thumb_up_alt
-                                    : Icons.thumb_up_alt_outlined,
+                              const Icon(
+                                Icons.thumb_up_alt_outlined,
                                 size: 24.0,
                                 color: Colors.blue,
                               ),
@@ -183,114 +300,22 @@ class ProfileScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                '${post.totalLikes}',
+                                'Like',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16.0),
                               )
                             ],
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                Icons.chat_outlined,
-                                size: 24.0,
-                                color: Colors.amber,
-                              ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
-                              Text(
-                                '${post.totalComments} comment',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16.0),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 1,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 18.0,
-                              backgroundImage: NetworkImage(SocialCubit.get(
-                                  context)
-                                  .user
-                                  ?.image ??
-                                  'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              'write a comment ...',
-                              style:
-                              TextStyle(color: Colors.white, fontSize: 14.0),
-                            )
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PostScreen(
-                                  post: post,
-                                  postUser: user,
-                                  myImg: user.image ??
-                                      'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
-                                  myID: user.id!,
-                                ),
-                              ));
-                        },
-                      ),
-                    ),
-                    InkWell(
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.thumb_up_alt_outlined,
-                            size: 24.0,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          Text(
-                            'Like',
-                            style: TextStyle(color: Colors.white, fontSize: 16.0),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        SocialCubit.get(context).likePost(post.postId!);
-                      },
+                          onTap: () {
+                            SocialCubit.get(context).likePost(post.postId!);
+                          },
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          ),
-        );
+                ),
+              ),
+            );
 
         return state is SocialEditingProfile
             ? Padding(
@@ -358,6 +383,14 @@ class ProfileScreen extends StatelessWidget {
                                   ));
                             },
                             child: Text('Reset password')),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                            onPressed: () {}, child: Text('Add FaceID')),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -528,7 +561,10 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   (route) => false);
                             },
-                            child: Text('Logout')),
+                            child: Text(
+                              'Logout',
+                              style: TextStyle(color: Colors.red),
+                            )),
                       )
                     ],
                   ),

@@ -22,12 +22,24 @@ class FeedScreen extends StatelessWidget {
 
         Widget buildPostItem(context, Posts post) {
           var postUser;
+          var postlikers = [];
           if (post.userId == SocialCubit.get(context).user?.id) {
             postUser = SocialCubit.get(context).user;
           } else {
             postUser = SocialCubit.get(context)
                 .allUsers
                 ?.singleWhere((element) => element.id == post.userId);
+          }
+          if (post.totalLikes != 0 && post.reactedUserIds != 0) {
+            post.reactedUserIds.forEach((id) {
+              if (id == SocialCubit.get(context).user?.id) {
+                postlikers.add(SocialCubit.get(context).user);
+              } else {
+                postlikers.add(SocialCubit.get(context)
+                    .allUsers
+                    ?.singleWhere((element) => element.id == id));
+              }
+            });
           }
           return Card(
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -117,49 +129,118 @@ class FeedScreen extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  post.totalLikes != 0 &&
-                                          post.reactedUserIds?.contains(
-                                              SocialCubit.get(context).user?.id)
-                                      ? Icons.thumb_up_alt
-                                      : Icons.thumb_up_alt_outlined,
-                                  size: 24.0,
-                                  color: Colors.blue,
-                                ),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  '${post.totalLikes}',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16.0),
-                                )
-                              ],
-                            ),
+                            child: post.totalLikes != 0 &&
+                                    post.reactedUserIds != 0
+                                ? PopupMenuButton(
+                                    itemBuilder: (BuildContext context) {
+                                      return postlikers.map((e) {
+                                        return PopupMenuItem(
+                                            child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 15.0,
+                                              backgroundImage: NetworkImage(e!
+                                                      .image ??
+                                                  'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
+                                            ),
+                                            const SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              e.name,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ));
+                                      }).toList();
+                                    },
+                                    color: Colors.black,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          post.totalLikes != 0 &&
+                                                  post.reactedUserIds?.contains(
+                                                      SocialCubit.get(context)
+                                                          .user
+                                                          ?.id)
+                                              ? Icons.thumb_up_alt
+                                              : Icons.thumb_up_alt_outlined,
+                                          size: 24.0,
+                                          color: Colors.blue,
+                                        ),
+                                        const SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Text(
+                                          '${post.totalLikes}',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Icon(
+                                        post.totalLikes != 0 &&
+                                                post.reactedUserIds?.contains(
+                                                    SocialCubit.get(context)
+                                                        .user
+                                                        ?.id)
+                                            ? Icons.thumb_up_alt
+                                            : Icons.thumb_up_alt_outlined,
+                                        size: 24.0,
+                                        color: Colors.blue,
+                                      ),
+                                      const SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      Text(
+                                        '${post.totalLikes}',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0),
+                                      )
+                                    ],
+                                  ),
                           ),
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Icon(
-                                  Icons.chat_outlined,
-                                  size: 24.0,
-                                  color: Colors.amber,
-                                ),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  '${post.totalComments} comments',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16.0),
-                                )
-                              ],
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PostScreen(
+                                          post: post,
+                                          postUser: postUser,
+                                          myImg: cubit.user?.image ??
+                                              'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
+                                          myID: cubit.user!.id!),
+                                    ));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    Icons.chat_outlined,
+                                    size: 24.0,
+                                    color: Colors.amber,
+                                  ),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    '${post.totalComments} comments',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16.0),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

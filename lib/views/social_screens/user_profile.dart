@@ -210,23 +210,37 @@ class _UserProfileState extends State<UserProfile> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Icon(
-                              Icons.chat_outlined,
-                              size: 24.0,
-                              color: Colors.amber,
-                            ),
-                            const SizedBox(
-                              width: 5.0,
-                            ),
-                            Text(
-                              '${post.totalComments} comment',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0),
-                            )
-                          ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostScreen(
+                                    post: post,
+                                    myImg: widget.myImg,
+                                    postUser: widget.user,
+                                    myID: widget.myID,
+                                  ),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                Icons.chat_outlined,
+                                size: 24.0,
+                                color: Colors.amber,
+                              ),
+                              const SizedBox(
+                                width: 5.0,
+                              ),
+                              Text(
+                                '${post.totalComments} comment',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16.0),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
