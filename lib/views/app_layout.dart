@@ -17,9 +17,9 @@ class SocialLayout extends StatelessWidget {
     return BlocProvider(
       create: (context) => SocialCubit()
         ..getUserData()
-        ..updateLocation()
-        ..getAllPosts()
         ..getAllUserData()
+        ..getAllPosts()
+        ..updateLocation()
         ..createMarkers(context),
       child: BlocConsumer<SocialCubit, SocialState>(
         listener: (context, state) {

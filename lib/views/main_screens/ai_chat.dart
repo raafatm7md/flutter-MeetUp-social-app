@@ -46,7 +46,6 @@ class _AIChatScreenState extends State<AIChatScreen> {
 
           try{
             final response = await http.post(uri, body: jsonEncode(request));
-            print(response.body);
             setState(() {
               _chatHistory.add({
                 "time": DateTime.now(),

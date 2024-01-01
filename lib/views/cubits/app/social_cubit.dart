@@ -14,11 +14,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
-import 'package:social_app/views/bottom_nav_bar_screens/ai_chat.dart';
-import 'package:social_app/views/bottom_nav_bar_screens/chat.dart';
-import 'package:social_app/views/bottom_nav_bar_screens/feed.dart';
-import 'package:social_app/views/bottom_nav_bar_screens/profile.dart';
-import 'package:social_app/views/bottom_nav_bar_screens/map.dart';
+import 'package:social_app/views/main_screens/ai_chat.dart';
+import 'package:social_app/views/main_screens/chat.dart';
+import 'package:social_app/views/main_screens/feed.dart';
+import 'package:social_app/views/main_screens/profile.dart';
+import 'package:social_app/views/main_screens/map.dart';
 import '../../../models/all_users_model.dart';
 import '../../../models/user_model.dart';
 part 'social_state.dart';
@@ -79,7 +79,7 @@ class SocialCubit extends Cubit<SocialState> {
         .then((value) {
       AllUsers res = AllUsers.fromJson(value.data);
       if (res.status == true) {
-        allUsers = res.data;
+        allUsers = res.data?.reversed.toList();
         emit(SocialGetAllUsersSuccess());
       } else {
         emit(SocialGetUserTokenError());
@@ -266,7 +266,7 @@ class SocialCubit extends Cubit<SocialState> {
       DioHelper.getData(url: 'users/all', token: CacheHelper.getData('token'))
           .then((value) {
         AllUsers allRes = AllUsers.fromJson(value.data);
-        allRes.data?.forEach((element) {
+        allRes.data?.reversed.forEach((element) {
           mapUsers.add({
             'id': element.id,
             'name': '${element.name}',

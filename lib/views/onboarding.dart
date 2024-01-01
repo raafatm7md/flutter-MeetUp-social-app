@@ -4,14 +4,13 @@ import 'package:social_app/models/user_model.dart';
 import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
-import 'package:social_app/views/login_signup_screens/face_id.dart';
-import 'package:social_app/views/login_signup_screens/fingerprint_login.dart';
-import 'package:social_app/views/login_signup_screens/google_birthday_reset.dart';
-import 'package:social_app/views/login_signup_screens/login_screen.dart';
-import 'package:social_app/views/login_signup_screens/register_screen.dart';
 import 'package:social_app/views/widgets/widgets.dart';
-
 import 'app_layout.dart';
+import 'auth/face_id.dart';
+import 'auth/fingerprint_login.dart';
+import 'auth/google_birthday_reset.dart';
+import 'auth/login_screen.dart';
+import 'auth/register_screen.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});

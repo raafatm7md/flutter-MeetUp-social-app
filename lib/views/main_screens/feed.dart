@@ -5,6 +5,7 @@ import 'package:social_app/models/post_model.dart';
 import 'package:social_app/views/social_screens/new_post.dart';
 import '../cubits/app/social_cubit.dart';
 import '../social_screens/post_screen.dart';
+import '../social_screens/user_profile.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -38,38 +39,52 @@ class FeedScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25.0,
-                        backgroundImage: NetworkImage(postUser!.image ??
-                            'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            postUser.name!,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserProfile(
+                              myID: cubit.user!.id!,
+                              user: postUser,
+                              myImg: cubit.user?.image ??
+                                  'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg',
                             ),
-                          ),
-                          Text(
-                            post.createdAt!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption
-                                ?.copyWith(color: Colors.white),
-                          )
-                        ],
-                      )),
-                    ],
+                          ));
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25.0,
+                          backgroundImage: NetworkImage(postUser!.image ??
+                              'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              postUser.name!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              post.createdAt!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(color: Colors.white),
+                            )
+                          ],
+                        )),
+                      ],
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -140,7 +155,7 @@ class FeedScreen extends StatelessWidget {
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${post.totalComments} comment',
+                                  '${post.totalComments} comments',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16.0),
                                 )

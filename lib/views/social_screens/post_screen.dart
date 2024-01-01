@@ -80,7 +80,7 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               if (widget.post.postImage != null)
                 Container(
-                  height: 200,
+                  height: 250,
                   width: double.infinity,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
