@@ -26,7 +26,6 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
     super.initState();
     initializeCamera();
     Future.delayed(Duration(seconds: 5)).then((value) {
-      continueWithFaceID();
     });
   }
 
@@ -119,46 +118,5 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
         img.decodeImage(Uint8List.fromList(File(path).readAsBytesSync()))!;
     final compressedImage = img.encodeJpg(image, quality: quality);
     return compressedImage;
-  }
-
-  void continueWithFaceID() {
-    if (CacheHelper.getData('cachedEmail') != null &&
-        CacheHelper.getData('cachedPassword') != null) {
-      DioHelper.postData(url: 'login', data: {
-        'email': CacheHelper.getData('cachedEmail'),
-        'password': CacheHelper.getData('cachedPassword')
-      }).then((value) {
-        var res = UserModel.fromJson(value.data);
-        if (res.status == true) {
-          Fluttertoast.showToast(
-              msg: 'login success',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          CacheHelper.saveData('token', res.user?.token).then((value) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SocialLayout(),
-                ),
-                    (route) => false);
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'login failed',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      }).catchError((e) {
-        print(e.toString());
-      });
-    }
   }
 }

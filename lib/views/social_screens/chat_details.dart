@@ -111,7 +111,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               onFieldSubmitted: (value) {
                                 sendMessage().then((value) {
                                   if (value == true) {
-                                    Future.delayed(Duration(milliseconds: 5000))
+                                    Future.delayed(Duration(milliseconds: 3000))
                                         .then((value) {
                                       socket?.emit('fetch_messages', roomId);
                                     });
@@ -138,7 +138,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               onPressed: () {
                                 sendMessage().then((value) {
                                   if (value == true) {
-                                    Future.delayed(Duration(milliseconds: 5000))
+                                    Future.delayed(Duration(milliseconds: 3000))
                                         .then((value) {
                                       socket?.emit('fetch_messages', roomId);
                                     });
