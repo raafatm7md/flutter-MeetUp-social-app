@@ -27,7 +27,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
           setState(() {
             typing = true;
           });
-          final url = "https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=apiKey";
+          final url = "https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=\$botAPIKey";
           final uri = Uri.parse(url);
           List<Map<String,String>> msg = [];
           for (var i = 0; i < _chatHistory.length; i++) {
