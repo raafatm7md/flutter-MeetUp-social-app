@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:social_app/models/post_model.dart';
-import 'package:social_app/views/social_screens/chat_details.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,16 +10,20 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/services/dio.dart';
 import 'package:social_app/services/google_sign_in.dart';
 import 'package:social_app/services/shared.dart';
 import 'package:social_app/views/main_screens/ai_chat.dart';
 import 'package:social_app/views/main_screens/chat.dart';
 import 'package:social_app/views/main_screens/feed.dart';
-import 'package:social_app/views/main_screens/profile.dart';
 import 'package:social_app/views/main_screens/map.dart';
+import 'package:social_app/views/main_screens/profile.dart';
+import 'package:social_app/views/social_screens/chat_details.dart';
+
 import '../../../models/all_users_model.dart';
 import '../../../models/user_model.dart';
+
 part 'social_state.dart';
 
 class SocialCubit extends Cubit<SocialState> {
@@ -180,7 +183,7 @@ class SocialCubit extends Cubit<SocialState> {
 
       dio
           .post(
-        'http://35.180.243.107/api/profile/update',
+        '${baseUrl}profile/update',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',
@@ -220,7 +223,7 @@ class SocialCubit extends Cubit<SocialState> {
 
       dio
           .post(
-        'http://35.180.243.107/api/profile/update',
+        '${baseUrl}profile/update',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',

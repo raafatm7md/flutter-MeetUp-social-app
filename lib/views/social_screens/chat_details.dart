@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:social_app/models/message_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 import '../../models/all_users_model.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
@@ -94,13 +93,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               style: TextStyle(color: Colors.grey),
                             ),
                           )),
-                    typing? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('${widget.user.name} is typing ...', style: TextStyle(color: Colors.white)),
-                    ):
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                    typing
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('${widget.user.name} is typing ...',
+                                style: TextStyle(color: Colors.white)),
+                          )
+                        : SizedBox(
+                            height: 20.0,
+                          ),
                     Container(
                       height: 50,
                       child: Row(

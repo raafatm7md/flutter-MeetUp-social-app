@@ -49,7 +49,7 @@ class NewPostCubit extends Cubit<NewPostState> {
       });
       dio
           .post(
-        'http://35.180.243.107/api/user/posts/create',
+        '${baseUrl}user/posts/create',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',

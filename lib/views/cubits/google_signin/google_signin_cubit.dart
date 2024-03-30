@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:social_app/models/user_model.dart';
 
 import '../../../services/dio.dart';
-import '../../../services/shared.dart';
 
 part 'google_signin_state.dart';
 

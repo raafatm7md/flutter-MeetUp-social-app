@@ -4,8 +4,6 @@ import 'package:social_app/models/all_users_model.dart';
 import 'package:social_app/views/cubits/search/search_cubit.dart';
 import 'package:social_app/views/social_screens/user_profile.dart';
 
-import 'chat_details.dart';
-
 class SearchScreen extends StatelessWidget {
   final int id;
   final String myImg;
@@ -59,18 +57,19 @@ class SearchScreen extends StatelessWidget {
                   ),
                 ),
                 ListView.separated(
-                  shrinkWrap: true,
-                    itemBuilder: (context, index) => buildSearchItem(context, searchRes[index]),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        buildSearchItem(context, searchRes[index]),
                     separatorBuilder: (context, index) => Padding(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 20.0,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        height: 1.0,
-                        color: Colors.grey[800],
-                      ),
-                    ),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 20.0,
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            height: 1.0,
+                            color: Colors.grey[800],
+                          ),
+                        ),
                     itemCount: searchRes.length)
               ],
             ),
@@ -81,35 +80,35 @@ class SearchScreen extends StatelessWidget {
   }
 
   Widget buildSearchItem(context, Data user) => InkWell(
-    child: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30.0,
-            backgroundImage: NetworkImage(user.image ??
-                'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30.0,
+                backgroundImage: NetworkImage(user.image ??
+                    'https://i.pinimg.com/736x/c0/74/9b/c0749b7cc401421662ae901ec8f9f660.jpg'),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Text(
+                user.name!,
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 15,
-          ),
-          Text(
-            user.name!,
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-        ],
-      ),
-    ),
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserProfile(
-              myID: id,
-              user: user,
-              myImg: myImg,
-            ),
-          ));
-    },
-  );
+        ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfile(
+                  myID: id,
+                  user: user,
+                  myImg: myImg,
+                ),
+              ));
+        },
+      );
 }

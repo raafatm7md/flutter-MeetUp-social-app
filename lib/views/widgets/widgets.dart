@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 Widget appButton({
   Color color = Colors.deepPurple,
@@ -20,42 +19,41 @@ Widget appButton({
           style: const TextStyle(fontSize: 16),
         ));
 
-Widget appTextFormField({
-  required TextEditingController fieldController,
-  required TextInputType inputType,
-  required String label,
-  required IconData icon,
-  required String type,
-  bool isPassword = false,
-  void Function(String)? onSubmit,
-  void Function()? onTap,
-  Widget? suffix,
-  bool fixed = false
-}) =>
+Widget appTextFormField(
+        {required TextEditingController fieldController,
+        required TextInputType inputType,
+        required String label,
+        required IconData icon,
+        required String type,
+        bool isPassword = false,
+        void Function(String)? onSubmit,
+        void Function()? onTap,
+        Widget? suffix,
+        bool fixed = false}) =>
     TextFormField(
       obscureText: isPassword,
       controller: fieldController,
       keyboardType: inputType,
       enabled: !fixed,
       validator: (value) {
-        if (type == 'email'){
+        if (type == 'email') {
           if (isEmail(value!)) {
             return null;
           }
           return "Please enter a correct email";
-        } else if (type == 'password'){
+        } else if (type == 'password') {
           if (value!.length < 8) {
             return "Password is too short";
-          } else if (value.length > 30){
+          } else if (value.length > 30) {
             return "Password is too long";
           }
           return null;
-        } else if (type == 'username'){
+        } else if (type == 'username') {
           if (value!.isEmpty || value.contains(' ')) {
             return "Please enter available username";
           }
           return null;
-        } else if (type == 'birthday'){
+        } else if (type == 'birthday') {
           if (value!.isEmpty) {
             return 'Please enter your birthday';
           } else {
@@ -69,15 +67,18 @@ Widget appTextFormField({
               return 'Invalid month';
             } else if (day > 31) {
               return 'Invalid day';
-            } else if ((now.year-year)*365 + (now.month-month)*30 + (now.day-day) < (16*365)) {
+            } else if ((now.year - year) * 365 +
+                    (now.month - month) * 30 +
+                    (now.day - day) <
+                (16 * 365)) {
               // (int.parse(year) > int.parse(formatted)-18)
               return 'Must be older than 16 years';
-            } else if((year < 1920)){
+            } else if ((year < 1920)) {
               return 'Invalid year';
             }
           }
           return null;
-        } else if (type == 'otp'){
+        } else if (type == 'otp') {
           if (value?.length != 4) {
             return "Please enter correct OTP";
           }
@@ -96,8 +97,7 @@ Widget appTextFormField({
             icon,
             color: Colors.deepPurple[300],
           ),
-        suffixIcon: suffix
-      ),
+          suffixIcon: suffix),
       onFieldSubmitted: onSubmit,
       onTap: onTap,
     );

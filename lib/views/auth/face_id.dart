@@ -1,15 +1,10 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:io';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image/image.dart' as img;
+import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/user_model.dart';
-import '../../services/dio.dart';
-import '../../services/shared.dart';
-import '../app_layout.dart';
+import 'package:image/image.dart' as img;
 
 class FaceIdScreen extends StatefulWidget {
   const FaceIdScreen({super.key});
@@ -25,8 +20,7 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
   void initState() {
     super.initState();
     initializeCamera();
-    Future.delayed(Duration(seconds: 5)).then((value) {
-    });
+    Future.delayed(Duration(seconds: 5)).then((value) {});
   }
 
   @override
@@ -59,12 +53,12 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
               child: CameraPreview(controller!),
             )),
             Align(
-              alignment: Alignment(0, -.45),
+                alignment: Alignment(0, -.45),
                 child: Image.asset(
-              'assets/pics/faceMask.png',
-              color: Colors.deepPurple,
-              width: 350,
-            )),
+                  'assets/pics/faceMask.png',
+                  color: Colors.deepPurple,
+                  width: 350,
+                )),
             Align(
               alignment: Alignment(0, .9),
               child: Container(
@@ -72,10 +66,10 @@ class _FaceIdScreenState extends State<FaceIdScreen> {
                 width: 175,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.deepPurple
-                ),
-                child: Text('processing ...', style: TextStyle(color: Colors.white, fontSize: 20)),
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.deepPurple),
+                child: Text('processing ...',
+                    style: TextStyle(color: Colors.white, fontSize: 20)),
               ),
             ),
             Align(
