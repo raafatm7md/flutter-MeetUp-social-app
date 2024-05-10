@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-const baseUrl = 'http://13.53.177.188/api/';
+const baseUrl = 'http://13.53.174.153/api/';
 
 class DioHelper {
   static late Dio dio;
